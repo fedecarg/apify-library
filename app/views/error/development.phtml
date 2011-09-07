@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>Debug</title>
+<style>
+body {
+	font-family:Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+.info, .error {
+	border: 1px solid white;
+	padding: 5px;
+}
+.error {
+	border: 1px solid red;
+	background-color: #ffbaba;
+	
+}
+.info {
+	border: 1px solid #e8e8e8;
+	background-color: #f4f4f4;
+}
+
+</style>
+</head>
+<body>
+
+<h1>Exception</h1>
+<h3>Error Details</h3>
+<div class="info">
+	<pre><?php var_dump($response->toArray()) ?></pre>
+</div>
+
+<h3>Stack Trace</h3>
+<div class="info">
+	<pre><?php var_dump($response->getException()->getTrace()) ?></pre>
+</div>
+
+<h3>Request Parameters</h3>
+<div class="info">
+    <pre><?php var_dump($request->getParams()) ?></pre>
+</div>
+
+<h3>Queries</h3>
+<div class="info">
+	<pre><?php try { var_dump(Loader::getInstance()->getDatabase()->getQueries()); } catch (Exception $e) { echo 'Not connected'; } ?></pre>
+</div>
+
+<br/>
+<br/>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+<h2>Response</h2>
+  
+<table>
+<tr>
+  <td width="120px"><strong>Status Code:</strong></td>
+  <td><?php echo $view->statusCode ?></td>
+</tr>
+
+<tr>
+  <td width="120px"><strong>Response Type:</strong></td>
+  <td><?php echo $view->responseType ?></td>
+</tr>
+
+<tr>
+  <td width="120px"><strong>Allowed Types:</strong></td>
+  <td><?php echo print_r($view->allowedTypes, true) ?></td>
+</tr>
+
+<tr>
+  <td width="120px"><strong>Key:</strong></td>
+  <td><?php echo $view->key ?></td>
+</tr>
+</table>

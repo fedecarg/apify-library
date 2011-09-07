@@ -1,0 +1,33 @@
+<h2>Request</h2>
+  
+<table>
+<tr>
+  <td width="120px"><strong>HTTP Method:</strong></td>
+  <td><?php echo $view->method ?></td>
+</tr>
+
+<tr>
+  <td width="120px"><strong>Controller:</strong></td>
+  <td><?php echo $view->controller ?></td>
+</tr>
+
+<tr>
+  <td width="120px"><strong>Action:</strong></td>
+  <td><?php echo $view->action ?></td>
+</tr>
+
+<tr>
+  <td width="120px"><strong>Base URL:</strong></td>
+  <td><?php echo $view->baseUrl ?></td>
+</tr>
+
+<tr>
+  <td width="120px"><strong>URL Path:</strong></td>
+  <td><?php echo $view->urlPath ?></td>
+</tr>
+
+<tr>
+  <td width="120px"><strong>URL Params:</strong></td>
+  <td><?php echo print_r($view->params, true) ?></td>
+</tr>
+</table>

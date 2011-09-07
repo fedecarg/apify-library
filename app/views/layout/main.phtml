@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+    <meta charset="utf-8">
+    <title>Apify</title>
+    <meta name="author" content="">
+    <meta name="description" content="">
+    
+    <!-- styles -->
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap-1.2.0.min.css">
+
+    <!-- html5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <!-- fav and touch icons -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+</head>
+
+<body>
+
+<div class="container">
+    <div class="content">
+    <?php echo $view->layout()->content; ?>
+    </div>
+    <div class="sidebar">
+    <?php include APP_DIR . '/views/partials/sidebar.phtml'; ?>
+    </div>
+</div>
+    
+<div id="footer">
+</div>
+
+<?php echo isset($view->layout()->scripts) ? ltrim($view->layout()->scripts, "\r\n") : '' ?>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function()    {
+    // do something...
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<?php if ($view->pages->pageCount): ?>
+<div class="pagination">
+    <ul>
+        <!-- Previous page link -->
+    <?php if (isset($view->pages->previous)): ?>
+        <li class="prev"><a href="<?php echo $view->pageUrl.$view->pages->previous ?>">Previous</a></li>
+    <?php endif; ?>
+    
+        <!-- Numbered page links -->
+    <?php foreach ($view->pages->pagesInRange as $page): ?>
+    <?php if ($page != $view->pages->current): ?>
+        <li><a href="<?php echo $view->pageUrl.$page ?>"><?php echo $page; ?></a></li>
+    <?php else: ?>    
+        <li class="active"><a href="#"><?php echo $page; ?></a></li>
+    <?php endif; ?>
+    <?php endforeach; ?>
+    
+        <!-- Next page link -->
+    <?php if (isset($view->pages->next)): ?>
+        <li class="next"><a href="<?php echo $view->pageUrl.$view->pages->next ?>">Next</a></li>
+    <?php endif; ?>
+    </ul>
+</div>
+<?php endif; ?>
