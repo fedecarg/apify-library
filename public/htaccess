@@ -1,4 +1,5 @@
 <IfModule mod_rewrite.c>
 RewriteEngine on 
-RewriteRule !\.(js|ico|gif|jpg|png|css|html)$ /index.php
+RewriteRule !\.(js|ico|gif|jpg|png|css|html)$ index.php
+# or RewriteRule !\.(js|ico|gif|jpg|png|css|html)$ /index.php
 </IfModule>
