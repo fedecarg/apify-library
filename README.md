@@ -9,6 +9,16 @@ without having to write too much code.
 
 See it in action: http://www.youtube.com/watch?v=7ptoB0yCsDo
 
+### Demos 
+
+To demonstrate the possibilities of Apify and to show how it works work within a common user interface, I've created the following demo applications which are listed below.
+
+**Apify Snippets** 
+http://www.apifysnippets.com
+
+Apify Snippets allows registered users to submit code snippets, documentation or ideas, vote and add comments.
+
+
 # Features
 
 - Small and simple web application.
