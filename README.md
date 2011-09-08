@@ -15,16 +15,23 @@ To demonstrate the possibilities of Apify and to show how it works, I've created
 
 ### Apify Snippets
 
-Apify Snippets allows registered users to submit code snippets/documentation/ideas, vote and add comments.
+Apify Snippets allows registered users to submit code snippets, vote and add comments.
 
-Supports the following  repreentations:
+Web Application:
 
 - http://www.apifysnippets.com/posts
+- http://www.apifysnippets.com/posts/recent
+- http://www.apifysnippets.com/?method=posts&sort=recent
+- http://www.apifysnippets.com/?method=posts&sort=popular
+
+Web Service:
+
 - http://www.apifysnippets.com/posts.json
 - http://www.apifysnippets.com/posts.rss
-- http://www.apifysnippets.com/posts/recent
 - http://www.apifysnippets.com/posts/recent.json
 - http://www.apifysnippets.com/posts/recent.rss
+- http://www.apifysnippets.com/?method=posts&sort=recent&format=json
+- http://www.apifysnippets.com/?method=posts&sort=popular&format=rss
 
 # Features
 
