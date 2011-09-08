@@ -23,7 +23,9 @@ define('DB_PASS', 'root');
 date_default_timezone_set('Europe/London');
 
 // Set PHP config values
-set_magic_quotes_runtime(0);
+if(get_magic_quotes_runtime()) {
+    set_magic_quotes_runtime(0);
+}
 ini_set('register_globals', 'Off');
 ini_set('short_open_tag', 'Off');
 ini_set('session.cookie_lifetime', '3600'); // 1 hour
