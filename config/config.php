@@ -15,9 +15,9 @@ if (DEBUG) {
 
 // Information required to connect to the database
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'database');
-define('DB_USER', 'username');
-define('DB_PASS', 'password');
+define('DB_NAME', 'apify');
+define('DB_USER', 'root');
+define('DB_PASS', 'root');
 
 // Default timezone used by all date/time functions
 date_default_timezone_set('Europe/London');
