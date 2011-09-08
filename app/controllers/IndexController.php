@@ -28,6 +28,8 @@ class IndexController extends Controller
     }
     
     /**
+     * Returns a View object.
+     * 
      * @route GET /?method=example.request
      * @route GET /example/request
      * 
@@ -36,7 +38,8 @@ class IndexController extends Controller
      */
     public function requestAction($request) 
     {
-        $view = $this->initView();
+        $view = new View();
+        $view->setLayout('main');
         
         $view->method = $request->getMethod();
         $view->controller = $request->getController();
@@ -49,6 +52,8 @@ class IndexController extends Controller
     }
     
     /**
+     * Returns a Response object (JSON or XML).
+     * 
      * @route GET /?method=example.response
      * @route GET /example/response
      * 
@@ -57,9 +62,9 @@ class IndexController extends Controller
      */
     public function responseAction($request) 
     {
-        $response = new Response();
-        $response->setAcceptableTypes(array('json', 'xml'));
-        if (null === $request->getParam('format')) {
+        $response = new Response(array('json', 'xml'));
+        if (! $request->hasParam('format')) {
+            // set default format
             $request->setParam('format', 'json');
         }
         
@@ -72,6 +77,8 @@ class IndexController extends Controller
     }
     
     /**
+     * Returns either a View object or a Response object.
+     * 
      * @route GET /?method=example.mixed
      * @route GET /example/mixed
      * 
@@ -80,11 +87,10 @@ class IndexController extends Controller
      */
     public function mixedAction($request) 
     {
-        if (null === $request->getParam('format')) {
-            $response = $this->initView();
-        } else {
-            $response = new Response();
-            $response->setAcceptableTypes(array('json', 'xml'));
+        $response = new Response(array('json', 'xml'));
+        if (! $request->hasParam('format')) {
+            $response = new View();
+            $response->setLayout('main');
         }
         
         $response->method = $request->getMethod();

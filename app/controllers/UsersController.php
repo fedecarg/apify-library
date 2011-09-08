@@ -2,6 +2,21 @@
 class UsersController extends Controller
 {
     /**
+     * The init() method is called by the request object after the controller
+     * is instantiated.
+     * 
+     * @param Request $request
+     * @return void
+     */
+    public function init($request)
+    {
+        // set default format
+        if (! $request->hasParam('format')) {
+            $request->setParam('format', 'json');
+        }
+    }
+    
+    /**
      * @route GET /?method=users
      * @route GET /users
      * 
@@ -21,8 +36,8 @@ class UsersController extends Controller
     /**
      * @route GET /?method=users.show&id=1
      * @route GET /?method=users.show&id=matt
-     * @route GET /users/1.json
-     * @route GET /users/matt.json
+     * @route GET /users/1
+     * @route GET /users/matt
      * 
      * @param Request $request
      * @return Response
@@ -53,12 +68,11 @@ class UsersController extends Controller
     public function createAction($request)
     {
         $response = new Response(array('json', 'xml'));
-        if ('POST' != $this->getMethod()) {
+        if ('POST' != $request->getMethod()) {
             $e = new Exception('HTTP method not allowed', Response::NOT_ALLOWED);
             return $response->setException($e);
         }
         
-        $model = $this->getModel('User');
         $user = new User(array(
             'name'     => $request->getPost('name'),
             'username' => $request->getPost('username'), 
@@ -66,7 +80,7 @@ class UsersController extends Controller
             'gender'   => $request->getPost('gender')
         ));
         
-        $id = $model->save($user);
+        $id = $this->getModel('User')->save($user);
         if (! is_numeric($id)) {
             $e = new Exception('An error occurred while creating user', Response::OK);
             return $response->setException($e);
@@ -88,13 +102,14 @@ class UsersController extends Controller
     public function updateAction($request)
     {   
         $response = new Response(array('json', 'xml'));
-        if ('POST' != $this->getMethod()) {
+        if ('POST' != $request->getMethod()) {
             $e = new Exception('HTTP method not supported', Response::NOT_ALLOWED);
             return $response->setException($e);
         }
         
-        $model = $this->getModel('User');
         $id = $request->getParam('id');
+        
+        $model = $this->getModel('User');
         $user = $model->find($id);
         if (! $user) {
             $e = new Exception('User not found', Response::NOT_FOUND);
@@ -104,7 +119,7 @@ class UsersController extends Controller
         $user->username = $request->getPost('username');
         $model->save($user);
         
-        $request->redirect(sprintf('/users/%s/show', $id));
+        return $response;
     }
     
     /**
@@ -118,8 +133,9 @@ class UsersController extends Controller
     {
         $response = new Response(array('json', 'xml'));
         
-        $model = $this->getModel('User');
         $id = $request->getParam('id');
+        
+        $model = $this->getModel('User');
         $user = $model->find($id);
         if (! $user) {
             $e = new Exception('User not found', Response::NOT_FOUND);
@@ -127,6 +143,6 @@ class UsersController extends Controller
         }
         $model->delete($user->id);
         
-        return $request->redirect('/users');
+        return $response;
     }
 }
