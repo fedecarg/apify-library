@@ -10,8 +10,8 @@ class IndexController extends Controller
      */
     public function init($request)
     {
-        if (! method_exists($this, $request->getAction())) {
-            $message = sprintf('Intercepted call to "%s" action', $request->getAction());
+        if (! method_exists($this, $request->getAction().'Action')) {
+            $message = sprintf('%s(): Intercepted call to "%s" action', __METHOD__, $request->getAction());
             throw new Exception($message, Response::NOT_FOUND);
         }
     }
@@ -28,8 +28,8 @@ class IndexController extends Controller
     }
     
     /**
-     * @route GET /?method=apify.request
-     * @route GET /apify/request
+     * @route GET /?method=example.request
+     * @route GET /example/request
      * 
      * @param Request $request
      * @return View
@@ -49,21 +49,49 @@ class IndexController extends Controller
     }
     
     /**
-     * @route GET /?method=apify.response
-     * @route GET /apify/response
+     * @route GET /?method=example.response
+     * @route GET /example/response
      * 
      * @param Request $request
-     * @return View
+     * @return Response
      */
     public function responseAction($request) 
     {
-        $view = $this->initView();
+        $response = new Response();
+        $response->setAcceptableTypes(array('json', 'xml'));
+        if (null === $request->getParam('format')) {
+            $request->setParam('format', 'json');
+        }
         
-        $view->statusCode = $response->getCode();
-        $view->responseType = $response->getResponseType();
-        $view->allowedTypes = $response->getAllowedTypes();
-        $view->key = 'value';
+        $response->statusCode = $response->getCode();
+        $response->responseType = $response->getResponseType();
+        $response->allowedTypes = $response->getAcceptableTypes();
+        $response->key = 'value';
         
-        return $view;
+        return $response;
     }
+    
+    /**
+     * @route GET /?method=example.mixed
+     * @route GET /example/mixed
+     * 
+     * @param Request $request
+     * @return View|Response
+     */
+    public function mixedAction($request) 
+    {
+        if (null === $request->getParam('format')) {
+            $response = $this->initView();
+        } else {
+            $response = new Response();
+            $response->setAcceptableTypes(array('json', 'xml'));
+        }
+        
+        $response->method = $request->getMethod();
+        $response->controller = $request->getController();
+        $response->action = $request->getAction();
+            
+        return $response;
+    }
+    
 }

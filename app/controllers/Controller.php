@@ -48,15 +48,14 @@ abstract class Controller
     /**
      * Returns an new instance of the View object.
      * 
-     * @param null|Layout $layout
+     * @param sring $layout
      * @return View 
      */
-    public function initView(Layout $layout = null)
+    public function initView($layout = 'main')
     {
         $view = new View();
-        if (null !== $layout) {
-            $view->setLayout($layout);
-        }
+        $view->setLayout($layout);
+        
         return $view;
     }
 }

@@ -1,44 +1,44 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml">
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>Apify</title>
-    <meta name="author" content="">
-    <meta name="description" content="">
-    
-    <!-- styles -->
-    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap-1.2.0.min.css">
-
-    <!-- html5 shim, for IE6-8 support of HTML elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    
-    <!-- fav and touch icons -->
-    <link rel="shortcut icon" href="/img/favicon.ico">
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+<title>Apify </title>
+<link href="https://a248.e.akamai.net/assets.github.com/391d5709865ba8f75ae0caafdde5f784c8b15fc9/stylesheets/bundle_github.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://apify.github.com/style/prettify.css" media="screen" rel="stylesheet" type="text/css">
 </head>
 
 <body>
 
-<div class="container">
-    <div class="content">
-    <?php echo $view->layout()->content; ?>
+<div id="main">
+
+<div class="site">
+
+    <div class="breadcrumb" style="font-size: 140%; padding: 5px 0 20px;">
+        <div style="background: url(http://apify.github.com/img/apify_logo.png) top left no-repeat; padding-bottom: 10px;">
+        <p style="padding: 40px 0 0 180px"><strong>Web API Creation Made Easy</strong></p>
+        </div>
     </div>
-    <div class="sidebar">
-    <?php include APP_DIR . '/views/partials/sidebar.phtml'; ?>
+
+    <div id="readme" class="announce">
+        <div class="wikistyle">
+        <?php echo $view->layout()->content; ?>
+        </div>
     </div>
-</div>
+
+    <br style="clear: both;">
     
-<div id="footer">
+</div>
+
 </div>
 
 <?php echo isset($view->layout()->scripts) ? ltrim($view->layout()->scripts, "\r\n") : '' ?>
+<script type="text/javascript" src="http://apify.github.com/js/prettify.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function()    {
-    // do something...
+	prettyPrint();
 });
 </script>
-
 </body>
+
 </html>

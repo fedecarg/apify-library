@@ -10,9 +10,9 @@ class UsersController extends Controller
      */
     public function indexAction($request)
     {
-        $model = $this->getModel('User');
+        $response = new Response(array('json', 'xml'));
         
-        $response = new Response('html', array('json', 'xml'));
+        $model = $this->getModel('User');        
         $response->users = $model->findAll();
         
         return $response;
@@ -20,14 +20,16 @@ class UsersController extends Controller
     
     /**
      * @route GET /?method=users.show&id=1
-     * @route GET /users/1/show
+     * @route GET /?method=users.show&id=matt
+     * @route GET /users/1.json
+     * @route GET /users/matt.json
      * 
      * @param Request $request
      * @return Response
      */
     public function showAction($request)
     {
-        $response = new Response('html', array('json', 'xml'));
+        $response = new Response(array('json', 'xml'));
         
         $model = $this->getModel('User');
         $id = $request->getParam('id');
@@ -50,9 +52,9 @@ class UsersController extends Controller
      */
     public function createAction($request)
     {
-        $response = new Response('json');
+        $response = new Response(array('json', 'xml'));
         if ('POST' != $this->getMethod()) {
-            $e = new Exception('HTTP method not supported', Response::NOT_ALLOWED);
+            $e = new Exception('HTTP method not allowed', Response::NOT_ALLOWED);
             return $response->setException($e);
         }
         
@@ -70,6 +72,9 @@ class UsersController extends Controller
             return $response->setException($e);
         }
         
+        $response->setCode(Response::CREATED);
+        $response->setEtagHeader(md5('/users/' . $id));
+        
         return $response;
     }
 
@@ -82,7 +87,7 @@ class UsersController extends Controller
      */
     public function updateAction($request)
     {   
-        $response = new Response('json');
+        $response = new Response(array('json', 'xml'));
         if ('POST' != $this->getMethod()) {
             $e = new Exception('HTTP method not supported', Response::NOT_ALLOWED);
             return $response->setException($e);
@@ -99,7 +104,7 @@ class UsersController extends Controller
         $user->username = $request->getPost('username');
         $model->save($user);
         
-        $request->redirect(sprintf('/api/users/%s/show', $id));
+        $request->redirect(sprintf('/users/%s/show', $id));
     }
     
     /**
@@ -111,7 +116,7 @@ class UsersController extends Controller
      */
     public function destroyAction($request)
     {
-        $response = new Response('json');
+        $response = new Response(array('json', 'xml'));
         
         $model = $this->getModel('User');
         $id = $request->getParam('id');
@@ -122,6 +127,6 @@ class UsersController extends Controller
         }
         $model->delete($user->id);
         
-        return $request->redirect('/api/users');
+        return $request->redirect('/users');
     }
 }

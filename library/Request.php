@@ -216,20 +216,25 @@ class Request
              throw new RequestException($e->getMessage(), Response::NOT_FOUND);
         }
         
-        $response = $controller->init($this);
-        if (null === $response) {
+        $controllerResponse = $controller->init($this);
+        if (! ($controllerResponse instanceof Response)) {
             if (! method_exists($controller, $actionName . 'Action')) {
                 $m = sprintf('Method "%s" not found', $actionName);
                 throw new RequestException($m, Response::NOT_FOUND);
             }
-            
             // call action method
-            $response = $controller->{$actionName . 'Action'}($this);
-            if (! is_object($response)) {
-                $m = sprintf('Method "%s::%s" contains an invalid return type', $controllerName, $actionName);
-                throw new RuntimeException($m);
-            }
-            $response = ($response instanceof View) ? new Response($response) : $response; 
+            $controllerResponse = $controller->{$actionName . 'Action'}($this);
+        }
+        
+        if ($controllerResponse instanceof View) {
+            $response = new Response();
+            $response->setView($controllerResponse);
+        } else if ($controllerResponse instanceof Response) {
+            $response = $controllerResponse;
+            $response->setResponseType($this->getParam('format'));
+        } else {
+            $m = sprintf('Method "%s::%s" contains an invalid return type', $controllerName, $actionName);
+            throw new RuntimeException($m);
         }
         
         $view = new Renderer();
@@ -580,7 +585,7 @@ class Request
             throw $e;
         }
         
-        $response = new Response('html', array('json', 'xml'));
+        $response = new Response(array('html', 'json', 'xml'));
         $response->setException($e);
         
         try {

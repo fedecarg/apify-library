@@ -29,16 +29,11 @@ class Renderer
      * @throws RendererException
      */
     public function render(Request $request, Response $response)
-    {       
+    {
         $responseType = $response->getResponseType();
-        $format = $request->getParam('format', null);
+        $format = $response->getHttpAcceptHeader();
         if (null !== $format && $response->isAcceptableType($format)) {
             $responseType = $format;
-        } else {
-            $format = $response->getHttpAcceptHeader();
-            if (null !== $format && $response->isAcceptableType($format)) {
-                $responseType = $format;
-            }
         }
         
         if ('json' === $responseType) {

@@ -34,6 +34,7 @@ class Response
     const FORBIDDEN           = 403; // The server understood the request, but is refusing to fulfill it.
     const NOT_FOUND           = 404; // The server has not found anything matching the Request-URI
     const NOT_ALLOWED         = 405; // The method specified in the Request-Line is not allowed for the resource identified by the Request-URI
+    const NOT_ACCEPTABLE      = 406; // The server can only generate a response that is not accepted by the client 
     const REQUEST_TIMEOUT     = 408;
     const SERVER_ERROR        = 500;
     const NOT_IMPLEMENTED     = 501; // The server does not support the functionality required to fulfill the request.
@@ -56,6 +57,7 @@ class Response
         self::FORBIDDEN       => 'HTTP/1.1 403 Forbidden',
         self::NOT_FOUND       => 'HTTP/1.1 404 Not Found',
         self::NOT_ALLOWED     => 'HTTP/1.1 405 Method Not Allowed',
+        self::NOT_ACCEPTABLE  => 'HTTP/1.1 406 Not Acceptable',
         self::REQUEST_TIMEOUT => 'HTTP/1.1 408 Request Timeout',
         self::SERVER_ERROR    => 'HTTP/1.1 500 Internal Server Error',
         self::NOT_IMPLEMENTED => 'HTTP/1.1 501 Not Implemented',
@@ -86,12 +88,12 @@ class Response
     /**
      * @var array
      */
-    protected $acceptableTypes = array();
+    protected $acceptableTypes = array('html');
     
     /**
      * @var null|string
      */
-    protected $responseType;
+    protected $responseType = 'html';
 
     /**
      * @var array
@@ -121,28 +123,26 @@ class Response
     /**
      * Class constructor.
      *
-     * @param string|View $responseType
-     * @param array $acceptableTypes
+     * @param array $acceptableTypes Defaults to html
      */
-    public function __construct($responseType, array $acceptableTypes = array())
+    public function __construct(array $acceptableTypes = null)
     {
-        if ($responseType instanceof View) {
-            $this->setResponseType('html');
-            $this->setView($responseType);
-        } else {
-            $this->setResponseType($responseType);    
+        if (is_array($acceptableTypes)) {
+            $this->setAcceptableTypes($acceptableTypes);
         }
-        
-        $acceptableTypes = array_merge(array($responseType), $acceptableTypes);
-        $this->setAcceptableTypes($acceptableTypes);
     }
     
     /**
      * @param null|string $type
      * @return Response
+     * @throws ResponseException
      */
     public function setResponseType($type)
     {
+        if (! $this->isAcceptableType($type)) {
+            throw new ResponseException('Not Acceptable', Response::NOT_ACCEPTABLE);   
+        }
+        
         $this->responseType = $type;
         return $this;
     }
@@ -367,6 +367,15 @@ class Response
         }
         
         return $this;
+    }
+    
+    /**
+     * @param stdClass $data
+     * @return void
+     */
+    public function setData(stdClass $data)
+    {
+        $this->data = $data;
     }
     
     /**
