@@ -13,10 +13,18 @@ See it in action: http://www.youtube.com/watch?v=7ptoB0yCsDo
 
 To demonstrate the possibilities of Apify and to show how it works, I've created the following demo applications which are listed below.
 
-**Apify Snippets**
+### Apify Snippets
 
-- Apify Snippets allows registered users to submit code snippets, documentation or ideas, vote and add comments.
-- http://www.apifysnippets.com
+Apify Snippets allows registered users to submit code snippets/documentation/ideas, vote and add comments.
+
+Supports the following  repreentations:
+
+- http://www.apifysnippets.com/posts
+- http://www.apifysnippets.com/posts.json
+- http://www.apifysnippets.com/posts.rss
+- http://www.apifysnippets.com/posts/recent
+- http://www.apifysnippets.com/posts/recent.json
+- http://www.apifysnippets.com/posts/recent.rss
 
 # Features
 
