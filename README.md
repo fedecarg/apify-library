@@ -11,7 +11,7 @@ See it in action: http://www.youtube.com/watch?v=7ptoB0yCsDo
 
 # Demos 
 
-To demonstrate the possibilities of Apify and to show how it works, I've created the following demo applications which are listed below.
+To demonstrate the possibilities of Apify and to show how it works, I've created the following demo application:
 
 ### Apify Snippets
 
