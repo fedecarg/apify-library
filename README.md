@@ -15,23 +15,29 @@ See it in action: http://www.youtube.com/watch?v=7ptoB0yCsDo
 
 # Demo
 
-To demonstrate the possibilities of Apify and to show how it works, I've created the following demo application:
+To demonstrate the possibilities of Apify and to show how it works, I've created 
+the following web application/service: Apify Snippets http://www.apifysnippets.com
 
-### Apify Snippets
+Apify Snippets allows registered users to submit posts, vote and add comments.
 
-Apify Snippets allows registered users to submit code snippets, vote and add comments.
+Posts URL scheme:
 
-Web Application:
+- http://apifysnippets.com/posts
+- http://apifysnippets.com/posts/popular
+- http://apifysnippets.com/posts/recent
+- http://apifysnippets.com/posts/new
+- http://apifysnippets.com/posts/1/edit
+- http://apifysnippets.com/posts/1/vote.json (POST)
+- http://apifysnippets.com/posts/1/comment.json (POST)
 
-- http://www.apifysnippets.com/posts
-- http://www.apifysnippets.com/posts/recent
+Posts representations:
 
-API:
-
-- http://www.apifysnippets.com/posts.json
-- http://www.apifysnippets.com/posts.rss
-- http://www.apifysnippets.com/posts/recent.json
-- http://www.apifysnippets.com/posts/recent.rss
+- http://apifysnippets.com/posts
+- http://apifysnippets.com/posts.json
+- http://apifysnippets.com/posts.rss
+- http://apifysnippets.com/posts/popular
+- http://apifysnippets.com/posts/popular.json
+- http://apifysnippets.com/posts/popular.rss
 
 # Features
 
