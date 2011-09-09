@@ -15,24 +15,18 @@ See it in action: http://www.youtube.com/watch?v=7ptoB0yCsDo
 
 # Demo
 
-To demonstrate the possibilities of Apify and to show how it works, I've created 
-the following web application/service:
+To demonstrate the possibilities of Apify, I've created http://www.apifysnippets.com 
+where registered users can submit posts, vote and add comments.
 
-http://www.apifysnippets.com
-
-Apify Snippets allows registered users to submit posts, vote and add comments.
-
-Posts URL scheme:
+URL scheme:
 
 - http://apifysnippets.com/posts
-- http://apifysnippets.com/posts/popular
-- http://apifysnippets.com/posts/recent
 - http://apifysnippets.com/posts/new
 - http://apifysnippets.com/posts/1/edit
 - http://apifysnippets.com/posts/1/vote.json (POST)
 - http://apifysnippets.com/posts/1/comment.json (POST)
 
-Posts representations:
+Representations:
 
 - http://apifysnippets.com/posts
 - http://apifysnippets.com/posts.json
