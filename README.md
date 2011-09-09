@@ -1,17 +1,15 @@
 # Introduction
 
 Apify is a small library and a clean alternative to enterprise frameworks. 
-It's extremely easy to use, if you are familiar with the Zend Framework then you 
-already know how to use Apify, and allows you to quickly create anything from a 
-Web application to a RESTful Web service. 
+It's extremely easy to use and allows you to quickly create anything from a 
+Web application to a RESTful Web service. If you are familiar with the Zend 
+Framework then you already know how to use Apify.
 
 Web services are a great way to extend your application, however, adding a Web API 
 to an existing web application can be a tedious and time-consuming task. Apify was 
 developed to ease that pain. It takes certain common patterns found in most web services 
 and abstract them so that you can quickly write Web APIs [without having to write too much 
 code][9].
-
-
 
 See it in action: http://www.youtube.com/watch?v=7ptoB0yCsDo
 
