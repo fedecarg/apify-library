@@ -16,7 +16,9 @@ See it in action: http://www.youtube.com/watch?v=7ptoB0yCsDo
 # Demo
 
 To demonstrate the possibilities of Apify and to show how it works, I've created 
-the following web application/service: Apify Snippets http://www.apifysnippets.com
+the following web application/service:
+
+http://www.apifysnippets.com
 
 Apify Snippets allows registered users to submit posts, vote and add comments.
 
