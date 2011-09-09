@@ -68,12 +68,16 @@ class UsersController extends Controller
             return new Exception('HTTP method not allowed', Response::NOT_ALLOWED);
         }
         
-        $user = new User(array(
-            'name'     => $request->getPost('name'),
-            'username' => $request->getPost('username'), 
-            'email'    => $request->getPost('email'), 
-            'gender'   => $request->getPost('gender')
-        ));
+        try {
+            $user = new User(array(
+                'name'     => $request->getPost('name'),
+                'username' => $request->getPost('username'), 
+                'email'    => $request->getPost('email'), 
+                'gender'   => $request->getPost('gender')
+            ));
+        } catch (ValidationException $e) {
+            return new Exception($e->getMessage(), Response::OK);
+        }
         
         $id = $this->getModel('User')->save($user);
         if (! is_numeric($id)) {
@@ -109,10 +113,9 @@ class UsersController extends Controller
         }
         
         try {
-            // throws ValidationException
             $user->username = $request->getPost('username');            
-        } catch (Exception $e) {
-            return new Exception($e->getMessage(), Response::BAD_REQUEST);
+        } catch (ValidationException $e) {
+            return new Exception($e->getMessage(), Response::OK);
         }
         $model->save($user);
         

@@ -19,7 +19,7 @@ class User extends Entity
         $this->username = $value;
     }
     
-    // sanitize and validate title (optional) 
+    // sanitize and validate name (optional) 
     public function setName($value)
     {
         $value = htmlspecialchars(trim($value), ENT_QUOTES);
