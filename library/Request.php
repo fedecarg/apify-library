@@ -226,7 +226,13 @@ class Request
             $controllerResponse = $controller->{$actionName . 'Action'}($this);
         }
         
-        if ($controllerResponse instanceof View) {
+        if ($controllerResponse instanceof Exception) {
+            $format = $this->getParam('format', 'html');
+            $response = new Response();
+            $response->setAcceptableTypes(array($format));
+            $response->setResponseType($format);
+            $response->setException($controllerResponse);
+        } else if ($controllerResponse instanceof View) {
             $response = new Response();
             $response->setView($controllerResponse);
         } else if ($controllerResponse instanceof Response) {
