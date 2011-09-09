@@ -7,8 +7,8 @@ a Web application to a RESTful Web service.
 Web services are a great way to extend your application, however, adding a Web API 
 to an existing web application can be a tedious and time-consuming task. Apify was 
 developed to ease that pain. It takes certain common patterns found in most web services 
-and abstract them so that you can quickly write Web APIs without having to write too much 
-code ([example][9]).
+and abstract them so that you can quickly write Web APIs [without having to write too much 
+code][9].
 
 If you are familiar with the Zend Framework, then you already know how to use 
 Apify.
@@ -78,7 +78,6 @@ The best ways to contribute are by finding and reporting bugs, writing tests for
 # License
 
 - Copyright (c) 2011, [Kewnode Ltd][8]. All rights reserved.
-
 
 [1]: href="https://dev.twitter.com/docs/api
 [2]: href="http://www.delicious.com/help/api
