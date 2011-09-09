@@ -25,7 +25,8 @@ date_default_timezone_set('Europe/London');
 // Set PHP config values
 ini_set('register_globals', 'Off');
 ini_set('short_open_tag', 'Off');
-ini_set('session.cookie_lifetime', '3600'); // 1 hour
+ini_set('session.cookie_lifetime', 0); // until browser is restarted
+ini_set('session.gc_maxlifetime', 3600); // number of seconds (1 hour)
 if (get_magic_quotes_runtime()) {
     set_magic_quotes_runtime(0);
 }
