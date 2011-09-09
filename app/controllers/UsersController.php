@@ -26,9 +26,7 @@ class UsersController extends Controller
     public function indexAction($request)
     {
         $response = new Response(array('json', 'xml'));
-        
-        $model = $this->getModel('User');        
-        $response->users = $model->findAll();
+        $response->users = $this->getModel('User')->findAll();
         
         return $response;
     }
@@ -40,21 +38,20 @@ class UsersController extends Controller
      * @route GET /users/matt
      * 
      * @param Request $request
-     * @return Response
+     * @return Response|Exception
      */
     public function showAction($request)
     {
-        $response = new Response(array('json', 'xml'));
-        
         $model = $this->getModel('User');
         $id = $request->getParam('id');
         $user = is_numeric($id) ? $model->find($id) : $model->findBy(array('username'=>$id));
         if (! $user) {
-            $e = new Exception('User not found', Response::NOT_FOUND);
-            return $response->setException($e);
+            return new Exception('User not found', Response::NOT_FOUND);
         }
         
+        $response = new Response(array('json', 'xml'));
         $response->user = $user;
+        
         return $response;
     }
 
@@ -63,14 +60,12 @@ class UsersController extends Controller
      * @route POST /users/create
      * 
      * @param Request $request
-     * @return Response
+     * @return Response|Exception
      */
     public function createAction($request)
     {
-        $response = new Response(array('json', 'xml'));
         if ('POST' != $request->getMethod()) {
-            $e = new Exception('HTTP method not allowed', Response::NOT_ALLOWED);
-            return $response->setException($e);
+            return new Exception('HTTP method not allowed', Response::NOT_ALLOWED);
         }
         
         $user = new User(array(
@@ -82,10 +77,10 @@ class UsersController extends Controller
         
         $id = $this->getModel('User')->save($user);
         if (! is_numeric($id)) {
-            $e = new Exception('An error occurred while creating user', Response::OK);
-            return $response->setException($e);
+            return new Exception('An error occurred while creating user', Response::OK);
         }
         
+        $response = new Response(array('json', 'xml'));
         $response->setCode(Response::CREATED);
         $response->setEtagHeader(md5('/users/' . $id));
         
@@ -97,14 +92,12 @@ class UsersController extends Controller
      * @route POST /users/1/update
      * 
      * @param Request $request
-     * @return Response
+     * @return Response|Exception
      */
     public function updateAction($request)
-    {   
-        $response = new Response(array('json', 'xml'));
+    {
         if ('POST' != $request->getMethod()) {
-            $e = new Exception('HTTP method not supported', Response::NOT_ALLOWED);
-            return $response->setException($e);
+            return new Exception('HTTP method not supported', Response::NOT_ALLOWED);
         }
         
         $id = $request->getParam('id');
@@ -112,14 +105,19 @@ class UsersController extends Controller
         $model = $this->getModel('User');
         $user = $model->find($id);
         if (! $user) {
-            $e = new Exception('User not found', Response::NOT_FOUND);
-            return $response->setException($e);
+            return new Exception('User not found', Response::NOT_FOUND);
         }
         
-        $user->username = $request->getPost('username');
+        try {
+            // throws ValidationException
+            $user->username = $request->getPost('username');            
+        } catch (Exception $e) {
+            return new Exception($e->getMessage(), Response::BAD_REQUEST);
+        }
         $model->save($user);
         
-        return $response;
+        // return 200 OK
+        return new Response(array('json', 'xml'));
     }
     
     /**
@@ -127,22 +125,20 @@ class UsersController extends Controller
      * @route GET /users/1/destroy
      * 
      * @param Request $request
-     * @return Response
+     * @return Response|Exception
      */
     public function destroyAction($request)
     {
-        $response = new Response(array('json', 'xml'));
-        
         $id = $request->getParam('id');
         
         $model = $this->getModel('User');
         $user = $model->find($id);
         if (! $user) {
-            $e = new Exception('User not found', Response::NOT_FOUND);
-            return $response->setException($e);
+            return new Exception('User not found', Response::NOT_FOUND);
         }
         $model->delete($user->id);
         
-        return $response;
+        // return 200 OK
+        return new Response(array('json', 'xml'));
     }
 }

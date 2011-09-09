@@ -6,13 +6,13 @@ class IndexController extends Controller
      * is instantiated.
      * 
      * @param Request $request
-     * @return void
+     * @return void|Exception
      */
     public function init($request)
     {
         if (! method_exists($this, $request->getAction().'Action')) {
             $message = sprintf('%s(): Intercepted call to "%s" action', __METHOD__, $request->getAction());
-            throw new Exception($message, Response::NOT_FOUND);
+            return new Exception($message, Response::NOT_FOUND);
         }
     }
     
@@ -89,6 +89,7 @@ class IndexController extends Controller
     {
         $response = new Response(array('json', 'xml'));
         if (! $request->hasParam('format')) {
+            // return html
             $response = new View();
             $response->setLayout('main');
         }
