@@ -23,20 +23,20 @@ define('DB_PASS', 'root');
 date_default_timezone_set('Europe/London');
 
 // Set PHP config values
-if(get_magic_quotes_runtime()) {
-    set_magic_quotes_runtime(0);
-}
 ini_set('register_globals', 'Off');
 ini_set('short_open_tag', 'Off');
 ini_set('session.cookie_lifetime', '3600'); // 1 hour
+if (get_magic_quotes_runtime()) {
+    set_magic_quotes_runtime(0);
+}
 
-// Include required files
+// Required files
 require_once ROOT_DIR . '/library/Loader.php';
 require_once ROOT_DIR . '/library/Exceptions.php';
 require_once ROOT_DIR . '/library/Router.php';
 require_once APP_DIR . '/controllers/Controller.php';
 
-// Include path configuration option
+// Include path
 set_include_path(ROOT_DIR . '/models' . PATH_SEPARATOR . ROOT_DIR . '/library');
 spl_autoload_register(array('Loader', 'autoload'));
 
