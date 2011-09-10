@@ -13,28 +13,6 @@ code ([example][9]).
 
 See it in action: http://www.youtube.com/watch?v=7ptoB0yCsDo
 
-# Demo
-
-To demonstrate the possibilities of Apify, I've created http://www.apifysnippets.com 
-where registered users can submit posts, vote and add comments.
-
-URL scheme:
-
-- http://apifysnippets.com/posts
-- http://apifysnippets.com/posts/new
-- http://apifysnippets.com/posts/1/edit
-- http://apifysnippets.com/posts/1/vote.json (POST)
-- http://apifysnippets.com/posts/1/comment.json (POST)
-
-Representations:
-
-- http://apifysnippets.com/posts
-- http://apifysnippets.com/posts.json
-- http://apifysnippets.com/posts.rss
-- http://apifysnippets.com/posts/popular
-- http://apifysnippets.com/posts/popular.json
-- http://apifysnippets.com/posts/popular.rss
-
 # Features
 
 - Small and simple web application.
@@ -56,10 +34,45 @@ Representations:
 - PHP 5.2 or greater.
 - MySQL and PDO_MYSQL driver (optional).
 
+# Installation
+
+- Download the .zip or .tar.gz file from the GitHub website and decompress it.
+- Upload the files to your web server via FTP, SFTP or SSH.
+
+Optional:
+
+- Create a MySQL database and user/password.
+- Import the schema.sql file into your database.
+- Open the config.php file and set your database settings.
+- Make sure the pdo_mysql PHP extension for MySQL is enabled.
+
 # Debugging
 
 The debugger is enabled by default. You can always turn it off by
 setting the "debug" option to false in the config.php file.
+
+# Demo
+
+To demonstrate the possibilities of Apify and to show how it works, 
+I've created http://www.apifysnippets.com, a web application/service 
+that allows Facebook users to submit posts, vote and add comments.
+
+URL scheme:
+
+- http://apifysnippets.com/posts
+- http://apifysnippets.com/posts/new
+- http://apifysnippets.com/posts/1/edit
+- http://apifysnippets.com/posts/1/vote.json
+- http://apifysnippets.com/posts/1/comment.json
+
+Representations:
+
+- http://apifysnippets.com/posts
+- http://apifysnippets.com/posts.json
+- http://apifysnippets.com/posts.rss
+- http://apifysnippets.com/posts/popular
+- http://apifysnippets.com/posts/popular.json
+- http://apifysnippets.com/posts/popular.rss
 
 # Reporting bugs
 
