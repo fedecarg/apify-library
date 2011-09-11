@@ -1,6 +1,6 @@
 # Introduction
 
-Apify is an alternative to bloated enterprise frameworks. It's small, easy to understand 
+Apify is an alternative to complex enterprise frameworks. It's small, easy to understand 
 and use. If you are familiar with the Zend Framework, then you already know how to use Apify.
 
 The Apify library allows developers to quickly create Web applications and RESTful Web services. 
