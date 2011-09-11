@@ -3,15 +3,17 @@
 Apify is a small and powerful open source library that delivers new levels of developer 
 productivity by simplifying the creation of RESTful architectures. It helps development 
 teams deliver quality web services and applications in reduced amounts of time. If you are 
-familiar with the Zend Framework, then you already know how to use Apify.
+familiar with the Zend Framework, then you already know how to use Apify. Take a look at 
+the [UsersController][9] class.
 
 Web services are a great way to extend your application, however, adding a Web API 
 to an existing web application can be a tedious and time-consuming task. Apify was 
 developed to ease that pain. It takes certain common patterns found in most web services 
 and abstract them so that you can quickly write Web APIs without having to write too much 
-code. For example: [UsersController][9].
+code.
 
-See it in action: http://www.youtube.com/watch?v=7ptoB0yCsDo
+You can see it in action here: 
+http://www.youtube.com/watch?v=7ptoB0yCsDo
 
 # Features
 
