@@ -21,7 +21,22 @@
  * @version     $Id: $
  */
 class Renderer
-{   
+{
+    /**
+     * @var null|string
+     */
+    private $contentType;
+    
+    /**
+     * Class constructor.
+     *
+     * @param string $contentType
+     */
+    public function __construct($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+    
     /**
      * @param Request $request
      * @param Response $response
@@ -30,19 +45,13 @@ class Renderer
      */
     public function render(Request $request, Response $response)
     {
-        $responseType = $response->getResponseType();
-        $format = $response->getHttpAcceptHeader();
-        if (null !== $format && $response->isAcceptableType($format)) {
-            $responseType = $format;
-        }
-        
-        if ('json' === $responseType) {
+        if ('json' === $this->contentType) {
             $view = new JsonRenderer();
-        } else if ('xml' === $responseType) {
+        } else if ('xml' === $this->contentType) {
             $view = new XmlRenderer();
-        } else if ('rss' === $responseType) {
+        } else if ('rss' === $this->contentType) {
             $view = new RssRenderer();
-        } else if ('html' === $responseType) {
+        } else if ('html' === $this->contentType) {
             $view = new HtmlRenderer();
         } else {
             $view = new HtmlRenderer();

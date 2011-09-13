@@ -84,16 +84,6 @@ class Response
         'txt'  => 'text/plain',
         'css'  => 'text/css'
     );
-    
-    /**
-     * @var array
-     */
-    protected $acceptableTypes = array('html');
-    
-    /**
-     * @var null|string
-     */
-    protected $responseType = 'html';
 
     /**
      * @var array
@@ -118,85 +108,7 @@ class Response
     /**
      * @var null|Exception
      */
-    protected $exception;    
-    
-    /**
-     * Class constructor.
-     *
-     * @param array $acceptableTypes Defaults to html
-     */
-    public function __construct(array $acceptableTypes = null)
-    {
-        if (is_array($acceptableTypes)) {
-            $this->setAcceptableTypes($acceptableTypes);
-        }
-    }
-    
-    /**
-     * @param null|string $type
-     * @return Response
-     * @throws ResponseException
-     */
-    public function setResponseType($type)
-    {
-        if (! $this->isAcceptableType($type)) {
-            throw new ResponseException('Not Acceptable', Response::NOT_ACCEPTABLE);   
-        }
-        
-        $this->responseType = $type;
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getResponseType()
-    {
-        return $this->responseType;
-    }
-    
-    /**
-     * @param array $types
-     * @return Response
-     */
-    public function setAcceptableTypes(array $types)
-    {
-        $this->acceptableTypes = $types;
-        return $this;
-    }
-    
-    /**
-     * @return array
-     */
-    public function getAcceptableTypes()
-    {
-        return $this->acceptableTypes;
-    }
-    
-    /**
-     * @return string
-     */
-    public function isAcceptableType($type)
-    {
-        return in_array($type, $this->acceptableTypes);
-    }
-    
-    /**
-     * @return string
-     */
-    public function getHttpAcceptHeader()
-    {
-        $mimeTypes = explode(',', $_SERVER['HTTP_ACCEPT']);
-        $format = null;
-        if (isset($mimeTypes[0])) {
-            $format = array_search($mimeTypes[0], $this->mimeTypes);
-            if (false === $format) {
-                $format = null;
-            }
-        }
-        return $format;
-    }
-
+    protected $exception;
 
     /**
      * @param int $code
@@ -264,16 +176,7 @@ class Response
     {
         return $this->exception;
     }
-    
-    /**
-     * @param string $string
-     * @return void
-     */
-    public function addHeader($string)
-    {
-        $this->headers[] = $string;
-    }
-    
+        
     /**
      * @param null|int $seconds 3600 seconds = 1 hour
      * @return void
@@ -324,6 +227,15 @@ class Response
     }
     
     /**
+     * @param string $string
+     * @return void
+     */
+    public function addHeader($string)
+    {
+        $this->headers[] = $string;
+    }
+    
+    /**
      * @return array
      */
     public function getHeaders()
@@ -343,6 +255,42 @@ class Response
         for ($i = 0; $i < count($headers); $i++) {
             header($headers[$i]);
         }
+    }
+    
+    /**
+     * @param string $subType
+     * @param string $mimeType
+     * @return void
+     */
+    public function addMimeType($subType, $mimeType)
+    {
+        $this->mimeTypes[$subType] = $mimeType;
+    }
+    
+    /**
+     * @return array
+     */
+    public function getMimeTypes()
+    {
+        return $this->mimeTypes;
+    }
+    
+    /**
+     * @param View $view
+     * @return self
+     */ 
+    public function setView($view) 
+    {
+        $this->view = $view;
+        return $this;
+    }
+ 
+    /**
+     * @return null|View
+     */ 
+    public function getView() 
+    {
+        return $this->view;
     }
     
     /**
@@ -437,24 +385,6 @@ class Response
     public function __get($key)
     {
         return $this->data->$key;
-    }
-    
-    /**
-     * @param View $view
-     * @return self
-     */ 
-    public function setView($view) 
-    {
-        $this->view = $view;
-        return $this;
-    }
- 
-    /**
-     * @return null|View
-     */ 
-    public function getView() 
-    {
-        return $this->view;
     }
     
     /**

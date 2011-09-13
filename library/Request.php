@@ -76,6 +76,11 @@ class Request
     protected $urlParts;
     
     /**
+     * @var array
+     */
+    protected $acceptableTypes = array();
+    
+    /**
      * @var string
      */
     protected $controller = self::CONTROLLER_INDEX;
@@ -212,38 +217,42 @@ class Request
         try {
             // instantiate controller
             $controller = Loader::getInstance()->getController($controllerName);
-        } catch(LoaderException $e) {
+        } catch (LoaderException $e) {
              throw new RequestException($e->getMessage(), Response::NOT_FOUND);
         }
         
-        $controllerResponse = $controller->init($this);
-        if (! ($controllerResponse instanceof Response)) {
-            if (! method_exists($controller, $actionName . 'Action')) {
-                $m = sprintf('Method "%s" not found', $actionName);
-                throw new RequestException($m, Response::NOT_FOUND);
+        try {
+            $controllerResponse = $controller->init($this);
+            if (! ($controllerResponse instanceof Response)) {
+                if (! method_exists($controller, $actionName . 'Action')) {
+                    $m = sprintf('Method "%s" not found', $actionName);
+                    throw new RequestException($m, Response::NOT_FOUND);
+                }
+                // call action method
+                $controllerResponse = $controller->{$actionName . 'Action'}($this);
             }
-            // call action method
-            $controllerResponse = $controller->{$actionName . 'Action'}($this);
+        } catch (RequestException $e) {
+            throw $e;
+        } catch (Exception $e) {
+            $controllerResponse = $e;
         }
         
         if ($controllerResponse instanceof Exception) {
-            $format = $this->getParam('format', 'html');
             $response = new Response();
-            $response->setAcceptableTypes(array($format));
-            $response->setResponseType($format);
             $response->setException($controllerResponse);
         } else if ($controllerResponse instanceof View) {
+            $this->setParam('format', 'html');
             $response = new Response();
-            $response->setView($controllerResponse);
+            $response->setView($controllerResponse);            
         } else if ($controllerResponse instanceof Response) {
             $response = $controllerResponse;
-            $response->setResponseType($this->getParam('format'));
         } else {
             $m = sprintf('Method "%s::%s" contains an invalid return type', $controllerName, $actionName);
             throw new RuntimeException($m);
         }
         
-        $view = new Renderer();
+        $contentType = $this->getParam('format');
+        $view = new Renderer($contentType);
         $view->render($this, $response);
     }
     
@@ -393,13 +402,9 @@ class Request
             }
         }
         
-        // always return an array with at least one element
-        if (! isset($parts[0])) {
-            $parts = array('index'); 
-        }
         $this->setUrlParts($parts);
         
-        return $this->urlParts;   
+        return $parts;   
     }
 
     /**
@@ -449,12 +454,17 @@ class Request
             throw new RuntimeException('URL path is undefined');
         }
                 
-        // format
-        $formatPos = strrpos(basename($urlPath), '.');
-        if (false !== $formatPos) {
-            $format = substr(basename($urlPath), $formatPos+1);
+        // content negotiation
+        $extensionPos = strrpos(basename($urlPath), '.');
+        if (false !== $extensionPos) {
+            $format = substr(basename($urlPath), $extensionPos+1);
             $this->setParam('format', $format);
             $urlPath = substr($urlPath, 0, strrpos($urlPath, '.')); 
+        } else if ($this->isRestfulMappingEnabled && false === $this->hasParam('format')) {
+            $format = $this->getAcceptHeader();
+            if (null !== $format) {
+                $this->setParam('format', $format);
+            }
         }
         
         $urlPath = preg_replace('/\/+/', '\1/', rtrim($urlPath, '\/'));
@@ -558,26 +568,86 @@ class Request
     }
     
     /**
+     * @return null|string
+     */
+    public function getAcceptHeader()
+    {
+        $httpAccept = explode(',', $_SERVER['HTTP_ACCEPT']);
+        $type = null;
+        if (isset($httpAccept[0])) {
+            $response = new Response();
+            $mimeTypes = $response->getMimeTypes();
+            $type = array_search($httpAccept[0], $mimeTypes);
+            if (false === $type) {
+                $type = null;
+            }
+        }
+        return $type;
+    }
+    
+    /**
+     * @param array $types
+     * @return void
+     * @throws RequestException
+     */
+    public function acceptContentTypes(array $types)
+    {
+        $type = $this->getParam('format');
+        if (! in_array($type, $types)) {
+            throw new RequestException('Not Acceptable', Response::NOT_ACCEPTABLE);   
+        }
+        $this->setAcceptableTypes($types);
+    }
+    
+    /**
+     * @param array $types
+     * @return Request
+     */
+    public function setAcceptableTypes(array $types)
+    {
+        $this->acceptableTypes = $types;
+        return $this;
+    }
+    
+    /**
+     * @return array
+     */
+    public function getAcceptableTypes()
+    {
+        return $this->acceptableTypes;
+    }
+    
+    /**
+     * @param string $type
+     * @return Request
+     */
+    public function setDefaultContentType($type)
+    {
+        if (! $this->hasParam('format')) {
+            $this->setParam('format', $type);
+        }
+        return $this;
+    }
+    
+    /**
+     * @return Session
+     */
+    public function getSession()
+    {
+        return Loader::getInstance()->get('Session');
+    }
+    
+    /**
      * @param string $uri
      * @param integer $code HTTP status codes
      * @return void
      */
     public function redirect($uri, $code = Response::FOUND)
     {
-        $response = new Response('html');
+        $response = new Response();
         $response->setCode($code);
         $response->addHeader('Location: ' . $uri);
         $response->sendHeaders();
-    }
-    
-    /**
-     * Get a singleton instance of Session.
-     * 
-     * @return Session
-     */
-    public function getSession()
-    {
-        return Loader::getInstance()->get('Session');
     }
    
     /**
@@ -591,11 +661,10 @@ class Request
             throw $e;
         }
         
-        $response = new Response(array('html', 'json', 'xml'));
-        $response->setException($e);
-        
+        $response = new Response();
+        $response->setException($e);        
         try {
-            $view = new Renderer();
+            $view = new Renderer('html');
             $view->render($this, $response);
         } catch (Exception $e) {
             throw $e;

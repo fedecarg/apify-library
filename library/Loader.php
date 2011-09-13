@@ -181,10 +181,9 @@ class Loader
      */
     public static function autoload($className)
     {
-        if (false !== strstr($className, '_')) {
-            if (preg_match('/[^a-z0-9\-_.]/i', $className)) {
-                throw new RuntimeException('Security check: Illegal character in filename.');
-            }
+        if (preg_match('/[^a-z0-9\-_.]/i', $className)) {
+            throw new RuntimeException('Security check: Illegal character in filename.');
+        } else if (false !== strstr($className, '_')) {
             $className = str_replace('_', DIRECTORY_SEPARATOR, $className);
         }
         

@@ -7,12 +7,14 @@ class IndexController extends Controller
      * 
      * @param Request $request
      * @return void|Exception
+     * @throws Exception
      */
     public function init($request)
     {
         if (! method_exists($this, $request->getAction().'Action')) {
+            $request->setDefaultContentType('html');
             $message = sprintf('%s(): Intercepted call to "%s" action', __METHOD__, $request->getAction());
-            return new Exception($message, Response::NOT_FOUND);
+            throw new Exception($message, Response::NOT_FOUND);
         }
     }
     
@@ -52,32 +54,32 @@ class IndexController extends Controller
     }
     
     /**
-     * Returns a Response object (JSON or XML).
+     * Returns a Response object.
      * 
-     * @route GET /?method=example.response
-     * @route GET /example/response
+     * @route GET /?method=example.response&format=json
+     * @route GET /?method=example.response&format=xml
+     * @route GET /example/response.json
+     * @route GET /example/response.xml
      * 
      * @param Request $request
      * @return Response
      */
     public function responseAction($request) 
     {
-        $response = new Response(array('json', 'xml'));
-        if (! $request->hasParam('format')) {
-            // set default format
-            $request->setParam('format', 'json');
-        }
+        // $request->setDefaultContentType('json');
+        $request->acceptContentTypes(array('json', 'xml'));
         
+        $response = new Response();
         $response->statusCode = $response->getCode();
-        $response->responseType = $response->getResponseType();
-        $response->allowedTypes = $response->getAcceptableTypes();
+        $response->responseType = $request->getParam('format');
+        $response->allowedTypes = $request->getAcceptableTypes();
         $response->key = 'value';
         
         return $response;
     }
     
     /**
-     * Returns either a View object or a Response object.
+     * Returns either a View or Response object.
      * 
      * @route GET /?method=example.mixed
      * @route GET /example/mixed
@@ -87,11 +89,14 @@ class IndexController extends Controller
      */
     public function mixedAction($request) 
     {
-        $response = new Response(array('json', 'xml'));
-        if (! $request->hasParam('format')) {
-            // return html
+        $request->setDefaultContentType('html');
+        $request->acceptContentTypes(array('html', 'json', 'xml'));
+        
+        if ('html' === $request->getParam('format')) {
             $response = new View();
             $response->setLayout('main');
+        } else {
+            $response = new Response();
         }
         
         $response->method = $request->getMethod();

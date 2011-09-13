@@ -10,10 +10,8 @@ class UsersController extends Controller
      */
     public function init($request)
     {
-        // set default format
-        if (! $request->hasParam('format')) {
-            $request->setParam('format', 'json');
-        }
+        $request->setDefaultContentType('json');
+        $request->acceptContentTypes(array('json', 'xml'));
     }
     
     /**
@@ -25,7 +23,7 @@ class UsersController extends Controller
      */
     public function indexAction($request)
     {
-        $response = new Response(array('json', 'xml'));
+        $response = new Response();
         $response->users = $this->getModel('User')->findAll();
         
         return $response;
@@ -49,7 +47,7 @@ class UsersController extends Controller
             return new Exception('User not found', Response::NOT_FOUND);
         }
         
-        $response = new Response(array('json', 'xml'));
+        $response = new Response();
         $response->user = $user;
         
         return $response;
@@ -84,7 +82,7 @@ class UsersController extends Controller
             return new Exception('An error occurred while creating user', Response::OK);
         }
         
-        $response = new Response(array('json', 'xml'));
+        $response = new Response();
         $response->setCode(Response::CREATED);
         $response->setEtagHeader(md5('/users/' . $id));
         
@@ -120,7 +118,7 @@ class UsersController extends Controller
         $model->save($user);
         
         // return 200 OK
-        return new Response(array('json', 'xml'));
+        return new Response();
     }
     
     /**
@@ -142,6 +140,6 @@ class UsersController extends Controller
         $model->delete($user->id);
         
         // return 200 OK
-        return new Response(array('json', 'xml'));
+        return new Response();
     }
 }

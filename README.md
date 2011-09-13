@@ -55,9 +55,8 @@ setting the "debug" option to false in the config.php file.
 
 # Demo
 
-To demonstrate the possibilities of Apify and to show how it works, 
-I've created http://www.apifysnippets.com, a web application/service 
-that allows Facebook users to submit posts, vote and add comments.
+Apify Snippets is a web application/service 
+that allows users to submit posts, vote and add comments.
 
 URL scheme:
 

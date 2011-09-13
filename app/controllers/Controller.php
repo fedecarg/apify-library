@@ -34,14 +34,10 @@ abstract class Controller
     /**
      * Returns an single instance of the View object.
      * 
-     * @param null|Layout $layout
-     * @return View 
+     * @return null|View 
      */
-    public function getView(Layout $layout = null)
+    public function getView()
     {
-        if (null === $this->view) {
-            $this->view = $this->initView($layout);
-        }
         return $this->view;
     }
     
