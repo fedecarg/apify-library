@@ -44,7 +44,7 @@ class UsersController extends Controller
         $id = $request->getParam('id');
         $user = is_numeric($id) ? $model->find($id) : $model->findBy(array('username'=>$id));
         if (! $user) {
-            return new Exception('User not found', Response::NOT_FOUND);
+            throw new Exception('User not found', Response::NOT_FOUND);
         }
         
         $response = new Response();
@@ -63,7 +63,7 @@ class UsersController extends Controller
     public function createAction($request)
     {
         if ('POST' != $request->getMethod()) {
-            return new Exception('HTTP method not allowed', Response::NOT_ALLOWED);
+            throw new Exception('HTTP method not allowed', Response::NOT_ALLOWED);
         }
         
         try {
@@ -74,12 +74,12 @@ class UsersController extends Controller
                 'gender'   => $request->getPost('gender')
             ));
         } catch (ValidationException $e) {
-            return new Exception($e->getMessage(), Response::OK);
+            throw new Exception($e->getMessage(), Response::OK);
         }
         
         $id = $this->getModel('User')->save($user);
         if (! is_numeric($id)) {
-            return new Exception('An error occurred while creating user', Response::OK);
+            throw new Exception('An error occurred while creating user', Response::OK);
         }
         
         $response = new Response();
@@ -99,7 +99,7 @@ class UsersController extends Controller
     public function updateAction($request)
     {
         if ('POST' != $request->getMethod()) {
-            return new Exception('HTTP method not supported', Response::NOT_ALLOWED);
+            throw new Exception('HTTP method not supported', Response::NOT_ALLOWED);
         }
         
         $id = $request->getParam('id');
@@ -107,13 +107,13 @@ class UsersController extends Controller
         $model = $this->getModel('User');
         $user = $model->find($id);
         if (! $user) {
-            return new Exception('User not found', Response::NOT_FOUND);
+            throw new Exception('User not found', Response::NOT_FOUND);
         }
         
         try {
             $user->username = $request->getPost('username');            
         } catch (ValidationException $e) {
-            return new Exception($e->getMessage(), Response::OK);
+            throw new Exception($e->getMessage(), Response::OK);
         }
         $model->save($user);
         
@@ -135,7 +135,7 @@ class UsersController extends Controller
         $model = $this->getModel('User');
         $user = $model->find($id);
         if (! $user) {
-            return new Exception('User not found', Response::NOT_FOUND);
+            throw new Exception('User not found', Response::NOT_FOUND);
         }
         $model->delete($user->id);
         

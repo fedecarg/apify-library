@@ -12,9 +12,10 @@ class IndexController extends Controller
     public function init($request)
     {
         if (! method_exists($this, $request->getAction().'Action')) {
-            $request->setDefaultContentType('html');
             $message = sprintf('%s(): Intercepted call to "%s" action', __METHOD__, $request->getAction());
-            throw new Exception($message, Response::NOT_FOUND);
+            
+            // RequestException is always rendered as html
+            throw new RequestException($message, Response::NOT_FOUND);
         }
     }
     
