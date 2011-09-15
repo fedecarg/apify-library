@@ -12,20 +12,6 @@ $routes[] = new Route('/example/:action',
     )
 );
 
-$routes[] = new Route('/users', 
-    array(
-        'controller' => 'users',
-        'action'     => 'index'
-    )
-);
-
-$routes[] = new Route('/users/create', 
-    array(
-        'controller' => 'users',
-        'action'     => 'create'
-    )
-);
-
 $routes[] = new Route('/users/:id', 
     array(
         'controller' => 'users',
@@ -40,6 +26,20 @@ $routes[] = new Route('/users/:id/:action',
     array(
         'action'     => '(show|update|destroy)',
         'page'       => '\d+'
+    )
+);
+
+$routes[] = new Route('/users/create', 
+    array(
+        'controller' => 'users',
+        'action'     => 'create'
+    )
+);
+
+$routes[] = new Route('/users', 
+    array(
+        'controller' => 'users',
+        'action'     => 'index'
     )
 );
 
