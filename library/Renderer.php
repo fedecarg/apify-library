@@ -23,21 +23,6 @@
 class Renderer
 {
     /**
-     * @var null|string
-     */
-    private $contentType;
-    
-    /**
-     * Class constructor.
-     *
-     * @param string $contentType
-     */
-    public function __construct($contentType)
-    {
-        $this->contentType = $contentType;
-    }
-    
-    /**
      * @param Request $request
      * @param Response $response
      * @return void
@@ -45,13 +30,14 @@ class Renderer
      */
     public function render(Request $request, Response $response)
     {
-        if ('json' === $this->contentType) {
+        $contentType = $request->getContentType();
+        if ('json' === $contentType) {
             $view = new JsonRenderer();
-        } else if ('xml' === $this->contentType) {
+        } else if ('xml' === $contentType) {
             $view = new XmlRenderer();
-        } else if ('rss' === $this->contentType) {
+        } else if ('rss' === $contentType) {
             $view = new RssRenderer();
-        } else if ('html' === $this->contentType) {
+        } else if ('html' === $contentType) {
             $view = new HtmlRenderer();
         } else {
             $view = new HtmlRenderer();
@@ -65,7 +51,6 @@ class Renderer
         exit($body);
     }
 }
-
 
 class HtmlRenderer
 {

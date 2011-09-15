@@ -76,9 +76,9 @@ class Request
     protected $urlParts;
     
     /**
-     * @var array
+     * @var null|string
      */
-    protected $acceptableTypes = array();
+    protected $contentType;
     
     /**
      * @var string
@@ -241,7 +241,7 @@ class Request
             $response = new Response();
             $response->setException($controllerResponse);
         } else if ($controllerResponse instanceof View) {
-            $this->setParam('format', 'html');
+            $this->setContentType('html');
             $response = new Response();
             $response->setView($controllerResponse);            
         } else if ($controllerResponse instanceof Response) {
@@ -251,8 +251,7 @@ class Request
             throw new RuntimeException($m);
         }
         
-        $contentType = $this->getParam('format');
-        $view = new Renderer($contentType);
+        $view = new Renderer();
         $view->render($this, $response);
     }
     
@@ -444,10 +443,11 @@ class Request
             $filename = (isset($_SERVER['SCRIPT_FILENAME'])) ? basename($_SERVER['SCRIPT_FILENAME']) : '';
             if (isset($_SERVER['SCRIPT_NAME']) && basename($_SERVER['SCRIPT_NAME']) === $filename) {
                 $urlPath = $_SERVER['SCRIPT_NAME'];
-            } else 
+            } else {
                 if (isset($_SERVER['PHP_SELF']) && basename($_SERVER['PHP_SELF']) === $filename) {
                     $urlPath = $_SERVER['PHP_SELF'];
                 }
+            }
         }
         
         if (empty($urlPath)) {
@@ -457,13 +457,13 @@ class Request
         // content negotiation
         $extensionPos = strrpos(basename($urlPath), '.');
         if (false !== $extensionPos) {
-            $format = substr(basename($urlPath), $extensionPos+1);
-            $this->setParam('format', $format);
+            $contentType = substr(basename($urlPath), $extensionPos+1);
+            $this->setContentType($contentType);
             $urlPath = substr($urlPath, 0, strrpos($urlPath, '.')); 
-        } else if ($this->isRestfulMappingEnabled && false === $this->hasParam('format')) {
-            $format = $this->getAcceptHeader();
-            if (null !== $format) {
-                $this->setParam('format', $format);
+        } else if ($this->isRestfulMappingEnabled) {
+            $contentType = $this->getAcceptHeader();
+            if (null !== $contentType) {
+                $this->setContentType($contentType);
             }
         }
         
@@ -566,67 +566,63 @@ class Request
     {
         return $_SERVER['REQUEST_METHOD'];
     }
-    
+        
     /**
-     * @return null|string
+     * @param string $type
+     * @return Request
      */
-    public function getAcceptHeader()
+    public function setContentType($type)
     {
-        $httpAccept = explode(',', $_SERVER['HTTP_ACCEPT']);
-        $type = null;
-        if (isset($httpAccept[0])) {
-            $response = new Response();
-            $mimeTypes = $response->getMimeTypes();
-            $type = array_search($httpAccept[0], $mimeTypes);
-            if (false === $type) {
-                $type = null;
-            }
-        }
-        return $type;
+        $this->contentType = $type;
+        return $this;
     }
     
     /**
+     * @return string
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function hasContentType()
+    {
+        return null !== $this->contentType;
+    }
+    
+    /**
+     * Restricts the Content Types allowed.
+     * 
      * @param array $types
      * @return void
      * @throws RequestException
      */
     public function acceptContentTypes(array $types)
     {
-        $type = $this->getParam('format');
-        if (! in_array($type, $types)) {
+        if (! in_array($this->getContentType(), $types)) {
             throw new RequestException('Not Acceptable', Response::NOT_ACCEPTABLE);   
         }
-        $this->setAcceptableTypes($types);
     }
     
     /**
-     * @param array $types
-     * @return Request
+     * @return null|string
      */
-    public function setAcceptableTypes(array $types)
+    public function getAcceptHeader()
     {
-        $this->acceptableTypes = $types;
-        return $this;
-    }
-    
-    /**
-     * @return array
-     */
-    public function getAcceptableTypes()
-    {
-        return $this->acceptableTypes;
-    }
-    
-    /**
-     * @param string $type
-     * @return Request
-     */
-    public function setDefaultContentType($type)
-    {
-        if (! $this->hasParam('format')) {
-            $this->setParam('format', $type);
+        $accept = explode(',', $_SERVER['HTTP_ACCEPT']);
+        $type = null;
+        if (isset($accept[0])) {
+            $response = new Response();
+            $mimeTypes = $response->getMimeTypes();
+            $type = array_search($accept[0], $mimeTypes);
+            if (false === $type) {
+                $type = null;
+            }
         }
-        return $this;
+        return $type;
     }
     
     /**
@@ -657,14 +653,15 @@ class Request
      */
     public function handleException(Exception $e)
     {
+        $this->setContentType('html');
         if ($e instanceof RuntimeException) {
             throw $e;
         }
         
         $response = new Response();
-        $response->setException($e);        
+        $response->setException($e);
         try {
-            $view = new Renderer('html');
+            $view = new Renderer();
             $view->render($this, $response);
         } catch (Exception $e) {
             throw $e;

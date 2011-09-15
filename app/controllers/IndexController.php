@@ -13,7 +13,6 @@ class IndexController extends Controller
     {
         if (! method_exists($this, $request->getAction().'Action')) {
             $message = sprintf('%s(): Intercepted call to "%s" action', __METHOD__, $request->getAction());
-            
             // RequestException is always rendered as html
             throw new RequestException($message, Response::NOT_FOUND);
         }
@@ -43,6 +42,7 @@ class IndexController extends Controller
     {
         $view = new View();
         $view->setLayout('main');
+        // or $this->initView();
         
         $view->method = $request->getMethod();
         $view->controller = $request->getController();
@@ -67,13 +67,12 @@ class IndexController extends Controller
      */
     public function responseAction($request) 
     {
-        // $request->setDefaultContentType('json');
+        // accept JSON and XML
         $request->acceptContentTypes(array('json', 'xml'));
         
         $response = new Response();
         $response->statusCode = $response->getCode();
-        $response->responseType = $request->getParam('format');
-        $response->allowedTypes = $request->getAcceptableTypes();
+        $response->contentType = $request->getContentType();
         $response->key = 'value';
         
         return $response;
@@ -90,10 +89,10 @@ class IndexController extends Controller
      */
     public function mixedAction($request) 
     {
-        $request->setDefaultContentType('html');
+        // accept HTML, JSON and XML
         $request->acceptContentTypes(array('html', 'json', 'xml'));
         
-        if ('html' === $request->getParam('format')) {
+        if ('html' === $request->getContentType()) {
             $response = new View();
             $response->setLayout('main');
         } else {
