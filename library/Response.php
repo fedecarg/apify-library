@@ -158,10 +158,16 @@ class Response
      */
     public function setException(Exception $e)
     {
-        if (! array_key_exists($e->getCode(), $this->statusCodes)) {
+        $code = $e->getCode();
+        if (0 === $code) {
+            // status code is undefined
+            $code = self::OK;
+        } else if (! array_key_exists($code, $this->statusCodes)) {
+            // unknown status code
             throw $e;
         }
-        $this->setCode($e->getCode());
+        
+        $this->setCode($code);
         $this->setError($e->getMessage(), get_class($e));
         
         $this->exception = $e;
