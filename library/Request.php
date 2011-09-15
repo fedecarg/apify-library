@@ -467,6 +467,11 @@ class Request
             }
         }
         
+        if (! $this->hasContentType()) {
+            // set default content type
+            $this->setContentType('html');
+        }
+        
         $urlPath = preg_replace('/\/+/', '\1/', rtrim($urlPath, '\/'));
         if (empty($urlPath)) {
             $urlPath = '/';
