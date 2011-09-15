@@ -133,7 +133,7 @@ class Model
         }
         
         $stmt = $this->db->prepare(trim($sql));
-        $stmt->setFetchMode(PDO::FETCH_OBJ|PDO::FETCH_PROPS_LATE, $this->entity);
+        $stmt->setFetchMode(PDO::FETCH_OBJ|PDO::FETCH_PROPS_LATE);
         $stmt->execute($values);
         $this->db->addQuery($stmt->queryString);
         
