@@ -116,10 +116,6 @@ class Response
      */
     public function setCode($code)
     {
-        if (! array_key_exists($code, $this->statusCodes)) {
-            $code = self::SERVER_ERROR;
-        }
-
         $this->code = $code;            
         return $this;
     }
@@ -141,9 +137,9 @@ class Response
     {
         $error = new stdClass();
         $error->message = $message;
-        $error->type = $type;        
+        $error->type = $type;      
+          
         $this->error = $error;
-        
         return $this;
     }
 
@@ -158,14 +154,17 @@ class Response
     /**
      * @param Exception $e
      * @return Response
+     * @throws Exception
      */
     public function setException(Exception $e)
     {
-        $this->exception = $e;
-
-        $this->setError($e->getMessage(), get_class($e));
+        if (! array_key_exists($e->getCode(), $this->statusCodes)) {
+            throw $e;
+        }
         $this->setCode($e->getCode());
+        $this->setError($e->getMessage(), get_class($e));
         
+        $this->exception = $e;
         return $this;
     }
 
