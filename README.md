@@ -12,10 +12,10 @@ developed to ease that pain. It takes certain common patterns found in most web 
 and abstract them so that you can quickly write Web APIs without having to write too much 
 code.
 
-You can see it in action here: 
+You can see it in action here:\ 
 http://www.youtube.com/watch?v=7ptoB0yCsDo
 
-Documentation:
+Documentation:\
 http://apifydoc.com
 
 # Features
