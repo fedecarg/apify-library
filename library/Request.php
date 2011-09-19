@@ -76,9 +76,9 @@ class Request
     protected $urlParts;
     
     /**
-     * @var null|string
+     * @var string
      */
-    protected $contentType;
+    protected $contentType = 'html';
     
     /**
      * @var string
@@ -106,12 +106,20 @@ class Request
     
     /**
      * @params string $keyword
+     * @return Request
+     */
+    public function setUrlKeyword($keyword)
+    {
+        $this->urlKeyword = $keyword;
+        return $this;
+    }
+    
+    /**
      * @params int $segment
      * @return Request
      */
-    public function setUrlKeyword($keyword, $segment = null)
+    public function setUrlSegment($segment)
     {
-        $this->urlKeyword = $keyword;
         if (is_numeric($segment)) {
             $this->urlSegment = $segment;
         }
@@ -336,6 +344,9 @@ class Request
         
         $this->setController($controller);
         $this->setAction($action);
+        if ($this->hasParam('format')) {
+            $this->setContentType($this->getParam('format'));
+        }
     }
     
     /**
@@ -453,23 +464,20 @@ class Request
         if (empty($urlPath)) {
             throw new RuntimeException('URL path is undefined');
         }
-                
+        
         // content negotiation
         $extensionPos = strrpos(basename($urlPath), '.');
         if (false !== $extensionPos) {
             $contentType = substr(basename($urlPath), $extensionPos+1);
             $this->setContentType($contentType);
             $urlPath = substr($urlPath, 0, strrpos($urlPath, '.')); 
+        } else if ($this->hasParam('format')){
+            $contentType = $this->getParam('format');
         } else if ($this->isRestfulMappingEnabled) {
             $contentType = $this->getAcceptHeader();
             if (null !== $contentType) {
                 $this->setContentType($contentType);
             }
-        }
-        
-        if (! $this->hasContentType()) {
-            // set default content type
-            $this->setContentType('html');
         }
         
         $urlPath = preg_replace('/\/+/', '\1/', rtrim($urlPath, '\/'));
