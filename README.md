@@ -15,6 +15,9 @@ code.
 You can see it in action here: 
 http://www.youtube.com/watch?v=7ptoB0yCsDo
 
+Documentation:
+http://apifydoc.com
+
 # Features
 
 - Small and simple web application.
@@ -55,25 +58,24 @@ setting the "debug" option to false in the config.php file.
 
 # Demo
 
-Apify Snippets is a web application/service 
-that allows users to submit posts, vote and add comments.
+The following Apify web application/service allows users to submit posts, vote and add comments.
 
 URL scheme:
 
-- http://apifysnippets.com/posts
-- http://apifysnippets.com/posts/new
-- http://apifysnippets.com/posts/1/edit
-- http://apifysnippets.com/posts/1/vote.json
-- http://apifysnippets.com/posts/1/comment.json
+- http://apifydoc.com/posts
+- http://apifydoc.com/posts/new
+- http://apifydoc.com/posts/1/edit
+- http://apifydoc.com/posts/1/vote.json
+- http://apifydoc.com/posts/1/comment.json
 
 Representations:
 
-- http://apifysnippets.com/posts
-- http://apifysnippets.com/posts.json
-- http://apifysnippets.com/posts.rss
-- http://apifysnippets.com/posts/popular
-- http://apifysnippets.com/posts/popular.json
-- http://apifysnippets.com/posts/popular.rss
+- http://apifydoc.com/posts
+- http://apifydoc.com/posts.json
+- http://apifydoc.com/posts.rss
+- http://apifydoc.com/posts/popular
+- http://apifydoc.com/posts/popular.json
+- http://apifydoc.com/posts/popular.rss
 
 # Reporting bugs
 
