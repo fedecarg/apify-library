@@ -10,9 +10,12 @@ class UsersController extends Controller
      */
     public function init($request)
     {
-        if (! $request->hasContentType()) {
+        if ('html' == $request->getContentType()) {
+            // change the default type from HTML to JSON
             $request->setContentType('json');
         }
+        
+        // only serve JSON and XML
         $request->acceptContentTypes(array('json', 'xml'));
     }
     
