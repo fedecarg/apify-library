@@ -15,9 +15,6 @@ code.
 You can see it in action here:   
 http://www.youtube.com/watch?v=7ptoB0yCsDo
 
-Documentation:   
-http://apifydoc.com
-
 # Features
 
 - Small and simple web application.
@@ -34,28 +31,17 @@ http://apifydoc.com
 - Encourages proper use of HTTP response codes.
 - Domain models with out-of-the-box default implementations and input validation.
 
-# Requirements
+# Documentation
 
-- PHP 5.2 or greater.
-- MySQL and PDO_MYSQL driver (optional).
-
-# Installation
-
-- Download the .zip or .tar.gz file from the GitHub website and decompress it.
-- Upload the files to your web server via FTP, SFTP or SSH.
-
-Optional:
-
-- Create a MySQL database and user/password.
-- Import the schema.sql file into your database.
-- Open the config.php file and set your database settings.
-- Make sure the pdo_mysql PHP extension for MySQL is enabled.
-
-# Debugging
-
-The debugger is enabled by default. You can always turn it off by
-setting the "debug" option to false in the config.php file.
-
+- [Apify Overview](http://apifydoc.com/posts/3/apify-overview)
+- [Installation Guide](http://apifydoc.com/posts/7/installation-guide)
+- [Environments](http://apifydoc.com/posts/8/environments)
+- [Controller](http://apifydoc.com/posts/17/action-controllers)
+- [URL Dispatcher](http://apifydoc.com/posts/18/url-dispatcher)
+- [Content Negotiation](http://apifydoc.com/posts/22/content-negotiation)
+- [Web APIs](http://apifydoc.com/posts/21/building-a-web-service-api)
+- [Web Applications](http://apifydoc.com/posts/20/building-a-web-application)
+- 
 # Demo
 
 The following Apify web application/service allows users to submit posts, vote and add comments.
