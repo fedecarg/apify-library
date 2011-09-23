@@ -222,16 +222,15 @@ class Request
         
         $controllerName = $this->getController();
         $actionName = $this->getAction();
+        
         try {
             // instantiate controller
             $controller = Loader::getInstance()->getController($controllerName);
-        } catch (LoaderException $e) {
-             throw new RequestException($e->getMessage(), Response::NOT_FOUND);
-        }
-        
-        try {
-            $controllerResponse = $controller->init($this);
-            if (! ($controllerResponse instanceof Response)) {
+            $controllerResponse = null;
+            if (method_exists($controller, 'init')) {
+                $controllerResponse = $controller->init($this);
+            }
+            if (null === $controllerResponse) {
                 if (! method_exists($controller, $actionName . 'Action')) {
                     $m = sprintf('Method "%s" not found', $actionName);
                     throw new RequestException($m, Response::NOT_FOUND);
@@ -239,6 +238,8 @@ class Request
                 // call action method
                 $controllerResponse = $controller->{$actionName . 'Action'}($this);
             }
+        } catch (LoaderException $e) {
+            throw $e;
         } catch (RequestException $e) {
             throw $e;
         } catch (Exception $e) {
