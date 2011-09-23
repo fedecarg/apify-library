@@ -2,24 +2,6 @@
 class UsersController extends Controller
 {
     /**
-     * The init() method is called by the request object after the controller
-     * is instantiated.
-     * 
-     * @param Request $request
-     * @return void
-     */
-    public function init($request)
-    {
-        if ('html' == $request->getContentType()) {
-            // change the default type from HTML to JSON
-            $request->setContentType('json');
-        }
-        
-        // only serve JSON and XML
-        $request->acceptContentTypes(array('json', 'xml'));
-    }
-    
-    /**
      * @route GET /?method=users
      * @route GET /users
      * 
@@ -28,9 +10,17 @@ class UsersController extends Controller
      */
     public function indexAction($request)
     {
-        $response = new Response();
-        $response->users = $this->getModel('User')->findAll();
+        // serve HTML, JSON and XML
+        $request->acceptContentTypes(array('html', 'json', 'xml'));
         
+        if ('html' == $request->getContentType()) {
+            $response = new View();
+            $response->setLayout('main');
+        } else {
+            $response = new Response();
+        }
+        
+        $response->users = $this->getModel('User')->findAll();
         return $response;
     }
     
@@ -45,6 +35,9 @@ class UsersController extends Controller
      */
     public function showAction($request)
     {
+        // serve HTML, JSON and XML
+        $request->acceptContentTypes(array('html', 'json', 'xml'));
+        
         $model = $this->getModel('User');
         $id = $request->getParam('id');
         $user = is_numeric($id) ? $model->find($id) : $model->findBy(array('username'=>$id));
@@ -52,21 +45,28 @@ class UsersController extends Controller
             throw new Exception('User not found', Response::NOT_FOUND);
         }
         
-        $response = new Response();
-        $response->user = $user;
+        if ('html' == $request->getContentType()) {
+            $response = new View();
+            $response->setLayout('main');
+        } else {
+            $response = new Response();
+            $response->setEtagHeader(md5('/users/' . $user->id));
+        }
         
+        $response->user = $user; 
         return $response;
     }
 
     /**
-     * @route POST /?method=users.create
-     * @route POST /users/create
+     * @route POST /?method=users.create&format=json
+     * @route POST /users/create.json
      * 
      * @param Request $request
      * @return Response|Exception
      */
     public function createAction($request)
     {
+        $request->acceptContentTypes(array('json'));
         if ('POST' != $request->getMethod()) {
             throw new Exception('HTTP method not allowed', Response::NOT_ALLOWED);
         }
@@ -95,17 +95,18 @@ class UsersController extends Controller
     }
 
     /**
-     * @route POST /?method=users.update&id=1
-     * @route POST /users/1/update
+     * @route POST /?method=users.update&id=1&format=json
+     * @route POST /users/1/update.json
      * 
      * @param Request $request
      * @return Response|Exception
      */
     public function updateAction($request)
     {
+        $request->acceptContentTypes(array('json'));
         if ('POST' != $request->getMethod()) {
             throw new Exception('HTTP method not supported', Response::NOT_ALLOWED);
-        }
+        }        
         
         $id = $request->getParam('id');
         
@@ -127,16 +128,17 @@ class UsersController extends Controller
     }
     
     /**
-     * @route GET /?method=users.destroy&id=1
-     * @route GET /users/1/destroy
+     * @route GET /?method=users.destroy&id=1&format=json
+     * @route GET /users/1/destroy.json
      * 
      * @param Request $request
      * @return Response|Exception
      */
     public function destroyAction($request)
     {
-        $id = $request->getParam('id');
+        $request->acceptContentTypes(array('json'));
         
+        $id = $request->getParam('id');
         $model = $this->getModel('User');
         $user = $model->find($id);
         if (! $user) {
