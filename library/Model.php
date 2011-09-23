@@ -50,21 +50,11 @@ class Model
     /**
      * Class constructor.
      * 
-     * @param string $entityName
+     * @param Database $db
      */
-    public function __construct($entityName)
+    public function __construct(Database $db)
     {
-        $loader = Loader::getInstance();
-        $loader->includeFile($entityName, 'models');
-        
-        $this->entity = $entityName;
-        if (null === $this->getTable()) {
-            // creates an underscored and lowercase string
-            $tableName = $loader->get('StringUtil')->underscore($entityName);
-            $this->setTable($tableName);
-        }
-        
-        $this->db = $loader->getDatabase();
+        $this->db = $db;
     }
     
     /**
@@ -73,7 +63,7 @@ class Model
      * @param array $options
      * @return Model 
      */
-    protected function setDefaultOptions(array $options)
+    public function setDefaultOptions(array $options)
     {
         $this->defaultOptions = $options;
         return $this;
@@ -107,13 +97,31 @@ class Model
     }
     
     /**
-     * Returns the table name.
-     * 
      * @return string
      */
     public function getTable()
     {
         return $this->table;
+    }
+    
+    /**
+     * Sets the entity class name.
+     * 
+     * @param string $name
+     * @return Model
+     */
+    public function setEntity($name)
+    {
+        $this->entity = $name;
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getEntity()
+    {
+        return $this->entity;
     }
     
     /**
@@ -504,7 +512,7 @@ class Entity
      * @param mixed $value
      * @throws Exception
      */
-    public function setProperty($name, $value) 
+    protected function setProperty($name, $value) 
     {
         if (! is_string($name)) {
             throw new EntityException('Invalid property name: '. $name);

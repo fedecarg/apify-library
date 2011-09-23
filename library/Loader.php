@@ -99,21 +99,30 @@ class Loader
     }
 
     /**
-     * @param string $name Model name
+     * @param string $entityName
      * @return Model
      */
-    public function getModel($name)
+    public function getModel($entityName)
     {
-        $className = $name . 'Model';
-        if (! $this->isRegistered($className)) {
-            if ($this->includeFile($className, 'models')) {
-                $obj = new $className($name);
+        $modelName = $entityName . 'Model';
+        if (! $this->isRegistered($modelName)) {
+            if ($this->includeFile($modelName, 'models')) {
+                $model = new $modelName($this->getDatabase());
             } else {
-                $obj = new Model($name);
+                $model = new Model($this->getDatabase());
             }
-            $this->add($obj, $className);
+            
+            $this->includeFile($entityName, 'models');
+            $model->setEntity($entityName);
+            
+            if (null === $model->getTable()) {
+                $tableName = $this->get('StringUtil')->underscore($entityName);
+                $model->setTable($tableName);
+            } 
+            
+            $this->add($model, $modelName);
         }
-        return $this->get($className);
+        return $this->get($modelName);
     }
     
     /**
@@ -161,15 +170,16 @@ class Loader
      */
     public function includeFile($filename, $dir)
     {
-        $file = str_replace('/', DIRECTORY_SEPARATOR, sprintf('%s/%s/%s.php', APP_DIR, $dir, $filename));
-        if (! file_exists($file)) {
-            return false;
-        } else if (preg_match('/[^a-z0-9\-_.]/i', $filename)) {
+        if (preg_match('/[^a-z0-9\-_.]/i', $filename)) {
             throw new RuntimeException('Security check: Illegal character in filename.');
         }
         
-        require_once $file;
-        return true;
+        $file = str_replace('/', DIRECTORY_SEPARATOR, sprintf('%s/%s/%s.php', APP_DIR, $dir, $filename));
+        if (file_exists($file)) {
+            require_once $file;
+            return true;
+        }
+        return false;
     }
     
     /**
