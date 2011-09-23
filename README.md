@@ -41,7 +41,7 @@ http://www.youtube.com/watch?v=7ptoB0yCsDo
 - [Content Negotiation](http://apifydoc.com/posts/22/content-negotiation)
 - [Web APIs](http://apifydoc.com/posts/21/building-a-web-service-api)
 - [Web Applications](http://apifydoc.com/posts/20/building-a-web-application)
-- 
+
 # Demo
 
 The following Apify web application/service allows users to submit posts, vote and add comments.
