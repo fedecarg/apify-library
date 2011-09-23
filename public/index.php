@@ -1,5 +1,8 @@
 <?php
-require_once dirname(__FILE__) . '/../config/config.php';
+define('ROOT_DIR', realpath(dirname(__FILE__) . '/../'));
+define('APP_DIR', ROOT_DIR . '/app');
+
+require_once ROOT_DIR . '/config/config.php';
 
 try {
     $request = new Request();

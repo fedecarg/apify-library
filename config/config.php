@@ -1,8 +1,4 @@
 <?php
-// Application settings
-define('ROOT_DIR', realpath(dirname(__FILE__) . '/../'));
-define('APP_DIR', ROOT_DIR . '/app');
-
 // Error reporting level
 define('DEBUG', true);
 if (DEBUG) {
@@ -38,7 +34,7 @@ require_once ROOT_DIR . '/library/Router.php';
 require_once APP_DIR . '/controllers/Controller.php';
 
 // Include path
-set_include_path(ROOT_DIR . '/models' . PATH_SEPARATOR . ROOT_DIR . '/library');
+set_include_path(ROOT_DIR . '/library' . PATH_SEPARATOR . APP_DIR . '/models');
 spl_autoload_register(array('Loader', 'autoload'));
 
 
