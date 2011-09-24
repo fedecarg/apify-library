@@ -38,9 +38,10 @@ http://www.youtube.com/watch?v=7ptoB0yCsDo
 - [Environments](http://apifydoc.com/posts/8/environments)
 - [Controller](http://apifydoc.com/posts/17/action-controllers)
 - [URL Dispatcher](http://apifydoc.com/posts/18/url-dispatcher)
-- [Error Messages](http://www.apifydoc.com/posts/23/error-messages)
+- [Error Messages](http://apifydoc.com/posts/23/error-messages)
+- [Error Templates](http://apifydoc.com/posts/24/error-templates)
 - [Content Negotiation](http://apifydoc.com/posts/22/content-negotiation)
-- [Database](http://www.apifydoc.com/posts/24/basic-crud-operations)
+- [Database](http://apifydoc.com/posts/24/basic-crud-operations)
 - [Web APIs](http://apifydoc.com/posts/21/building-a-web-service-api)
 - [Web Applications](http://apifydoc.com/posts/20/building-a-web-application)
 
