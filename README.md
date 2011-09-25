@@ -40,7 +40,8 @@ http://www.youtube.com/watch?v=7ptoB0yCsDo
 - [Error Templates](http://apifydoc.com/posts/24/error-templates)
 - [URL Dispatcher](http://apifydoc.com/posts/18/url-dispatcher)
 - [Content Negotiation](http://apifydoc.com/posts/22/content-negotiation)
-- [Database](http://apifydoc.com/posts/24/basic-crud-operations)
+- [The Domain Object Model](http://apifydoc.com/posts/27/the-domain-object-model)
+- [Basic CRUD Operations](http://apifydoc.com/posts/29/basic-crud-operations)
 - [Web APIs](http://apifydoc.com/posts/21/building-a-web-service-api)
 - [Web Applications](http://apifydoc.com/posts/20/building-a-web-application)
 
