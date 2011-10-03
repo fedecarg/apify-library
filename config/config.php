@@ -28,9 +28,11 @@ if (get_magic_quotes_runtime()) {
 }
 
 // Required files
-require_once ROOT_DIR . '/library/Loader.php';
 require_once ROOT_DIR . '/library/Exceptions.php';
+require_once ROOT_DIR . '/library/Loader.php';
+require_once ROOT_DIR . '/library/Model.php';
 require_once ROOT_DIR . '/library/Router.php';
+// ZF base controller (optional)
 require_once APP_DIR . '/controllers/Controller.php';
 
 // Include path
