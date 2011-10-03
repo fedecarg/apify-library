@@ -193,14 +193,11 @@ class Loader
     {
         if (preg_match('/[^a-z0-9\-_.]/i', $className)) {
             throw new RuntimeException('Security check: Illegal character in filename.');
-        } else if (false !== strstr($className, '_')) {
+        }
+        if (false !== strstr($className, '_')) {
             $className = str_replace('_', DIRECTORY_SEPARATOR, $className);
         }
         
-        require_once ROOT_DIR 
-            . DIRECTORY_SEPARATOR 
-            . 'library' 
-            . DIRECTORY_SEPARATOR
-            . $className . '.php';
+        require_once $className . '.php';
     }
 }

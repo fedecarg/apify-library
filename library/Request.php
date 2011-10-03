@@ -95,6 +95,10 @@ class Request
      */
     protected $params = array();
     
+    /**
+     * @var Response
+     */
+    protected $response;
     
     /**
      * Class constructor.
@@ -206,11 +210,12 @@ class Request
     }
     
     /**
+     * @param null|string $controllerName
+     * @param null|string $actionName 
      * @return void
-     * @throws RequestException
      * @throws RuntimeException
      */
-    public function dispatch()
+    public function dispatch($controllerName = null, $actionName = null)
     {
         if ($this->isUrlRewritingEnabled && $this->router instanceof Router) {
             $this->getRouter()->route($this);
@@ -220,48 +225,94 @@ class Request
             $this->parseQueryString(); 
         }
         
-        $controllerName = $this->getController();
-        $actionName = $this->getAction();
+        $controllerName = isset($controllerName) ? $controllerName : $this->getController(); 
+        $actionName = isset($actionName) ? $actionName : $this->getAction();
         
+        $response = $this->handleRequest($controllerName, $actionName);
+        if (null !== $this->getResponse()) {
+            $response->setException($this->getResponse()->getException());
+        }
+        $this->setResponse($response);
+        
+        $renderer = new Renderer();
+        $renderer->render($this);
+    }
+    
+    
+    /**
+     * When a Controller has been found, the handleRequest method will be invoked, 
+     * which is responsible for handling the actual request and - if applicable - returning 
+     * an appropriate Response. So actually, this method is the main entrypoint for the 
+     * dispatch loop which delegates requests to controllers. 
+     * 
+     * @param string $controllerName
+     * @param string $actionName 
+     * @return mixed
+     * @throws RequestException
+     * @throws RuntimeException
+     */
+    public function handleRequest($controllerName, $actionName)
+    {    
         try {
-            // instantiate controller
             $controller = Loader::getInstance()->getController($controllerName);
-            $controllerResponse = null;
-            if (method_exists($controller, 'init')) {
-                $controllerResponse = $controller->init($this);
-            }
-            if (null === $controllerResponse) {
-                if (! method_exists($controller, $actionName . 'Action')) {
-                    $m = sprintf('Method "%s" not found', $actionName);
-                    throw new RequestException($m, Response::NOT_FOUND);
-                }
-                // call action method
-                $controllerResponse = $controller->{$actionName . 'Action'}($this);
-            }
         } catch (LoaderException $e) {
-            throw $e;
-        } catch (RequestException $e) {
-            throw $e;
-        } catch (Exception $e) {
-            $controllerResponse = $e;
+            throw new RequestException($e->getMessage(), Response::NOT_FOUND);
         }
         
-        if ($controllerResponse instanceof Exception) {
-            $response = new Response();
-            $response->setException($controllerResponse);
-        } else if ($controllerResponse instanceof View) {
+        if (method_exists($controller, 'setRequest')) {
+            $controller->setRequest($this);
+        }
+        
+        $controllerResponse = null;
+        if (method_exists($controller, 'init')) {
+            $controllerResponse = $controller->init($this);
+        }
+        
+        if (! isset($controllerResponse)) {
+            if (! method_exists($controller, $actionName . 'Action')) {
+                $m = sprintf('Method "%s" not found', $actionName);
+                throw new RequestException($m, Response::NOT_FOUND);
+            }
+            $controllerResponse = $controller->{$actionName . 'Action'}($this);
+        }
+        
+        $this->setController($controllerName);
+        $this->setAction($actionName);
+        
+        if ($controllerResponse instanceof View) {
             $this->setContentType('html');
             $response = new Response();
-            $response->setView($controllerResponse);            
+            $response->setView($controllerResponse);
+            return $response;      
         } else if ($controllerResponse instanceof Response) {
-            $response = $controllerResponse;
-        } else {
-            $m = sprintf('Method "%s::%s" contains an invalid return type', $controllerName, $actionName);
-            throw new RuntimeException($m);
+            return $controllerResponse;
         }
         
-        $view = new Renderer();
-        $view->render($this, $response);
+        $m = sprintf('Method "%s::%sAction()" contains an invalid return type', $controllerName, $actionName);
+        throw new RuntimeException($m);
+    }
+    
+    /**
+     * @param Exception $e
+     * @return void
+     * @throws Exception
+     */
+    public function handleException(Exception $e)
+    {
+        // don't render runtime exceptions
+        if ($e instanceof RuntimeException) {
+            throw $e;
+        }
+        
+        $response = new Response();
+        $response->setException($e);
+        $this->setResponse($response);
+        
+        try {
+            $this->dispatch('Error', 'error');
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
     
     /**
@@ -617,6 +668,7 @@ class Request
     public function acceptContentTypes(array $types)
     {
         if (! in_array($this->getContentType(), $types)) {
+            $this->setContentType('html');
             throw new RequestException('Not Acceptable', Response::NOT_ACCEPTABLE);   
         }
     }
@@ -648,6 +700,28 @@ class Request
     }
     
     /**
+     * Return the Response object
+     *
+     * @return Response
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
+     * Set the Response object
+     *
+     * @param Response $response
+     * @return self
+     */
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
+        return $this;
+    }
+    
+    /**
      * @param string $uri
      * @param integer $code HTTP status codes
      * @return void
@@ -658,27 +732,6 @@ class Request
         $response->setCode($code);
         $response->addHeader('Location: ' . $uri);
         $response->sendHeaders();
-    }
-   
-    /**
-     * @param Exception $e
-     * @return void
-     * @throws Exception
-     */
-    public function handleException(Exception $e)
-    {
-        $this->setContentType('html');
-        if ($e instanceof RuntimeException) {
-            throw $e;
-        }
-        
-        $response = new Response();
-        $response->setException($e);
-        try {
-            $view = new Renderer();
-            $view->render($this, $response);
-        } catch (Exception $e) {
-            throw $e;
-        }
+        exit;
     }
 }

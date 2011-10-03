@@ -24,28 +24,29 @@ class Renderer
 {
     /**
      * @param Request $request
-     * @param Response $response
      * @return void
      * @throws RendererException
      */
-    public function render(Request $request, Response $response)
+    public function render(Request $request)
     {
+        $response = $request->getResponse();
+        
         $contentType = $request->getContentType();
         if ('json' === $contentType) {
-            $view = new JsonRenderer();
+            $renderer = new JsonRenderer();
         } else if ('xml' === $contentType) {
-            $view = new XmlRenderer();
+            $renderer = new XmlRenderer();
         } else if ('rss' === $contentType) {
-            $view = new RssRenderer();
+            $renderer = new RssRenderer();
         } else if ('html' === $contentType) {
-            $view = new HtmlRenderer();
+            $renderer = new HtmlRenderer();
         } else {
-            $view = new HtmlRenderer();
+            $renderer = new HtmlRenderer();
             $e = new RendererException('Content type missing or invalid', Response::NOT_FOUND);
             $response->setException($e);     
         }
         
-        $body = $view->render($request, $response);
+        $body = $renderer->render($request, $response);
         $response->sendHeaders();
         
         exit($body);
@@ -62,44 +63,43 @@ class HtmlRenderer
      */
     public function render(Request $request, Response $response)
     {
+        $view = $response->getView(); 
+        if (! ($view instanceof View))  {
+            throw new RuntimeException('No View object set; unable to render view');
+        }
+        
         $response->setContentTypeHeader('html');
         
-        if (null !== $response->getException()) {
-            $dir = 'error';
-            $filename = DEBUG ? 'development' : 'production';
-        } else {
-            $dir = strtolower($request->getController());
-            $filename = strtolower($request->getAction());
+        $dir = strtolower($request->getController());
+        if (null !== $view->getScriptDir()) {
+            $dir = $view->getScriptDir();
+        }
+        $filename = strtolower($request->getAction());
+        if (null !== $view->getScript()) {
+            $filename = $view->getScript();
         }
         
-        $viewScript = sprintf('%s/views/%s/%s.phtml', APP_DIR, $dir, $filename);
-        $viewScript = str_replace('/', DIRECTORY_SEPARATOR, $viewScript);
-        if (! file_exists($viewScript)) {
-            throw new RuntimeException('View script not found: ' . $viewScript);
+        $scriptFile = sprintf('%s/views/%s/%s.phtml', APP_DIR, $dir, $filename);
+        $scriptFile = str_replace('/', DIRECTORY_SEPARATOR, $scriptFile);
+        if (! file_exists($scriptFile)) {
+            throw new RuntimeException('View script not found: ' . $scriptFile);
         }
-        unset($dir, $filename);
+        unset($dir, $filename);        
         
-        if ($response->getView() instanceof View)  {
-            $view = $response->getView();
-            ob_start();
-            include $viewScript;
-            $body = ob_get_clean();
-            if (null !== $view->getLayout()) {
-                $layoutScript = sprintf('%s/views/layout/%s.phtml', APP_DIR, $view->getLayout()->getScript());
-                $layoutScript = str_replace('/', DIRECTORY_SEPARATOR, $layoutScript);
-                if (file_exists($layoutScript)) {
-                    $view->layout()->content = $body;
-                    unset($viewScript, $body);
-                    ob_start();
-                    include $layoutScript;
-                    $body = ob_get_clean();
-                }
-            } 
-        } else {
-            $view = $response->getData();
-            ob_start();
-            include $viewScript;
-            $body = ob_get_clean();
+        ob_start();
+        include $scriptFile;
+        $body = ob_get_clean();
+        
+        if (null !== $view->getLayout()) {
+            $layoutFile = sprintf('%s/views/layout/%s.phtml', APP_DIR, $view->getLayout()->getScript());
+            $layoutFile = str_replace('/', DIRECTORY_SEPARATOR, $layoutFile);
+            if (file_exists($layoutFile)) {
+                $view->layout()->content = $body;
+                unset($viewScript, $body);
+                ob_start();
+                include $layoutFile;
+                $body = ob_get_clean();
+            }
         }
         
         return $body; 
