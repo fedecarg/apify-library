@@ -1,4 +1,15 @@
 <?php
+/**
+ * Controller is an abstract class you may use for implementing ZF-style Action 
+ * Controllers.
+ * 
+ * The most basic operation is to subclass Controller, and create action methods 
+ * that correspond to the various actions you wish the controller to handle for 
+ * your site. Apify's routing and dispatch handling will autodiscover any methods 
+ * ending in 'Action' in your class as potential controller actions. 
+ *
+ * Subclassing Controller is optional. 
+ */
 abstract class Controller
 {
     /**
@@ -7,16 +18,16 @@ abstract class Controller
     protected $view;
     
     /**
-     * @var Request
+     * @var null|Request
      */
     protected $request;
         
     /**
      * Zend_Controller_Action::init() method.
      * 
-     * Initialize object (method called by the Request object).
+     * Initialize object. Method called by the Request object.
      *
-     * @param $request
+     * @param Request $request
      * @return void
      */
     public function init($request) 
@@ -25,12 +36,12 @@ abstract class Controller
     /**
      * Zend_Controller_Action::setRequest() method.
      * 
-     * Set the Request object
+     * Sets the Request object
      *
      * @param Request $request
      * @return self
      */
-    public function setRequest(Request $request)
+    public function setRequest($request)
     {
         $this->request = $request;
         return $this;
@@ -39,7 +50,7 @@ abstract class Controller
     /**
      * Zend_Controller_Action::getRequest() method.
      * 
-     * Return the Request object
+     * Returns the Request object
      *
      * @return Request
      */
@@ -72,7 +83,7 @@ abstract class Controller
     /**
      * Zend_Controller_Action::_setParam() method.
      * 
-     * Set a parameter in the Request object.
+     * Sets a parameter in the Request object.
      *
      * @param string $paramName
      * @param mixed $value
@@ -87,7 +98,7 @@ abstract class Controller
     /**
      * Zend_Controller_Action::_hasParam() method.
      * 
-     * Determine whether a given parameter exists in the Request object.
+     * Determines whether a given parameter exists in the Request object.
      *
      * @param string $paramName
      * @return boolean
@@ -100,7 +111,7 @@ abstract class Controller
     /**
      * Zend_Controller_Action::_getAllParams() method.
      * 
-     * Return all parameters in the Request object as an associative array.
+     * Returns all parameters in the Request object as an associative array.
      *
      * @return array
      */
@@ -112,7 +123,7 @@ abstract class Controller
     /**
      * Zend_Controller_Action::_redirect() method.
      * 
-     * Redirect to another URL.
+     * Redirects to another URL.
      *
      * @param string $url
      * @param array $options Options to be used when redirecting

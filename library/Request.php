@@ -229,9 +229,6 @@ class Request
         $actionName = isset($actionName) ? $actionName : $this->getAction();
         
         $response = $this->handleRequest($controllerName, $actionName);
-        if (null !== $this->getResponse()) {
-            $response->setException($this->getResponse()->getException());
-        }
         $this->setResponse($response);
         
         $renderer = new Renderer();
@@ -286,10 +283,10 @@ class Request
             return $response;      
         } else if ($controllerResponse instanceof Response) {
             return $controllerResponse;
+        } else {        
+            $m = sprintf('Method "%s::%sAction()" contains an invalid return type', $controllerName, $actionName);
+            throw new RuntimeException($m);
         }
-        
-        $m = sprintf('Method "%s::%sAction()" contains an invalid return type', $controllerName, $actionName);
-        throw new RuntimeException($m);
     }
     
     /**
