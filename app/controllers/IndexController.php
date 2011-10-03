@@ -6,15 +6,14 @@ class IndexController extends Controller
      * is instantiated.
      * 
      * @param Request $request
-     * @return void|Exception
+     * @return void
      * @throws Exception
      */
     public function init($request)
     {
         if (! method_exists($this, $request->getAction().'Action')) {
             $message = sprintf('%s(): Intercepted call to "%s" action', __METHOD__, $request->getAction());
-            // RequestException is always rendered as html
-            throw new RequestException($message, Response::NOT_FOUND);
+            throw new Exception($message, Response::NOT_FOUND);
         }
     }
     
