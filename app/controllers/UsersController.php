@@ -6,7 +6,7 @@ class UsersController extends Controller
      * @route GET /users
      * 
      * @param Request $request
-     * @return Response
+     * @return Response|View
      */
     public function indexAction($request)
     {
@@ -31,7 +31,8 @@ class UsersController extends Controller
      * @route GET /users/matt
      * 
      * @param Request $request
-     * @return Response|Exception
+     * @return Response|View
+     * @throws Exception
      */
     public function showAction($request)
     {
@@ -62,7 +63,8 @@ class UsersController extends Controller
      * @route POST /users/create.json
      * 
      * @param Request $request
-     * @return Response|Exception
+     * @return Response
+     * @throws Exception
      */
     public function createAction($request)
     {
@@ -99,7 +101,8 @@ class UsersController extends Controller
      * @route POST /users/1/update.json
      * 
      * @param Request $request
-     * @return Response|Exception
+     * @return Response
+     * @throws Exception
      */
     public function updateAction($request)
     {
@@ -132,7 +135,8 @@ class UsersController extends Controller
      * @route GET /users/1/destroy.json
      * 
      * @param Request $request
-     * @return Response|Exception
+     * @return Response
+     * @throws Exception
      */
     public function destroyAction($request)
     {
