@@ -23,6 +23,16 @@
 class View
 {
     /**
+     * @var null|string
+     */
+    protected $script;
+    
+    /**
+     * @var null|string
+     */
+    protected $scriptDir;
+    
+    /**
      * @var null|Layout
      */
     protected $layout;
@@ -39,10 +49,15 @@ class View
     
     /**
      * Class constructor.
+     * 
+     * @param null|string $script
      */
-    public function __construct()
+    public function __construct($script = null)
     {
         $this->vars = new stdClass();
+        if (isset($script)) {
+            $this->setScript($script);
+        }
     }
     
     /**
@@ -114,6 +129,53 @@ class View
     public function getVars()
     {
         return $this->vars;
+    }
+    
+    /**
+     * @param string $name
+     * @return self
+     * @throws RuntimeException
+     */ 
+    public function setScript($name) 
+    {
+        if (false !== strpos($name, '/')) {
+            $parts = explode('/', $name);
+            if (! isset($parts[1])) {
+                throw new RuntimeException(__METHOD__ . ' expects parameter 1 to be valid script name');
+            }
+            $this->scriptDir = $parts[0];
+            $this->script = $parts[1];
+        } else {
+            $this->script = $name;
+        }
+        
+        return $this;
+    }
+ 
+    /**
+     * @return null|string
+     */ 
+    public function getScript() 
+    {
+        return $this->script;
+    }
+    
+    /**
+     * @param string $dir
+     * @return self
+     */ 
+    public function setScriptDir($dir) 
+    {
+        $this->scriptDir = $dir;
+        return $this;
+    }
+    
+    /**
+     * @return null|string
+     */ 
+    public function getScriptDir() 
+    {
+        return $this->scriptDir;
     }
     
     /**
