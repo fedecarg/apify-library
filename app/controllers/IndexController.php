@@ -26,7 +26,10 @@ class IndexController extends Controller
      */
     public function indexAction($request)
     {
-        return $this->initView();
+        $view = new View();
+        $view->setLayout('main');
+        
+        return $view;
     }
     
     /**
@@ -42,7 +45,6 @@ class IndexController extends Controller
     {
         $view = new View();
         $view->setLayout('main');
-        // or $this->initView();
         
         $view->method = $request->getMethod();
         $view->controller = $request->getController();
