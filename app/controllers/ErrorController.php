@@ -12,6 +12,7 @@ class ErrorController
         $response = $request->getResponse();
         $viewScript = DEBUG ? 'development' : 'production';
         
+        // get the Exception from the Response
         $exception = $response->getException();
         switch ($exception->getCode()) { 
             case Response::NOT_FOUND:
