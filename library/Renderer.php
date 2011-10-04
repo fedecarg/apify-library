@@ -198,12 +198,14 @@ class RssRenderer extends XmlRenderer
         $body  = '<?xml version="1.0" encoding="UTF-8"?>' . "\r\n";
         $body .= '<rss version="2.0">'  . "\r\n";
         $body .= '    <channel>' . "\r\n";
-        if (isset($response->channel)) {
+        if (isset($response->channel) && is_array($response->channel)) {
             foreach ($response->channel as $key => $value) {
                 $body .= '    <' . $key . '>'  . htmlspecialchars($value) . '</' . $key . '>' . "\r\n";
             }
         }
-        $body .= $this->serialize($response->items, 1);
+        if (isset($response->items) && is_array($response->items)) {
+            $body .= $this->serialize($response->items, 1);
+        }
         $body .= '    </channel>' . "\r\n";
         $body .= '</rss>' . "\r\n";
         
