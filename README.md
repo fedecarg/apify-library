@@ -83,6 +83,7 @@ The best ways to contribute are by finding and reporting bugs, writing tests for
 # License
 
 - Copyright (c) 2011, [Kewnode Ltd][8]. All rights reserved.
+- http://kewnode.com/apify/license
 
 [1]: https://dev.twitter.com/docs/api
 [2]: http://www.delicious.com/help/api
