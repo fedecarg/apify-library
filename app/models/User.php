@@ -13,7 +13,7 @@ class User extends Entity
     // validate username (optional)
     public function setUsername($value)
     {
-        if (preg_match('/[^a-z0-9\-_.]/i', $filename)) {
+        if (preg_match('/[^a-z0-9\-_.]/i', $value)) { // Undefined variable error fixed
             throw new ValidationException('Invalid username');
         }
         $this->username = $value;
