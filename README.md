@@ -33,38 +33,16 @@ http://www.youtube.com/watch?v=7ptoB0yCsDo
 
 # Documentation
 
-- [Apify Overview](http://apifydoc.com/posts/3/apify-overview)
-- [Installation Guide](http://apifydoc.com/posts/7/installation-guide)
-- [Controllers](http://apifydoc.com/posts/17/action-controllers)
-- [Error Messages](http://apifydoc.com/posts/23/error-messages)
-- [Error Templates](http://apifydoc.com/posts/24/error-templates)
-- [URL Dispatcher](http://apifydoc.com/posts/18/url-dispatcher)
-- [Content Negotiation](http://apifydoc.com/posts/22/content-negotiation)
-- [The Domain Object Model](http://apifydoc.com/posts/27/the-domain-object-model)
-- [Basic CRUD Operations](http://apifydoc.com/posts/29/basic-crud-operations)
-- [Web APIs](http://apifydoc.com/posts/21/building-a-web-service-api)
-- [Web Applications](http://apifydoc.com/posts/20/building-a-web-application)
+- [Getting Started](doc/GettingStarted.md)
+- [Controller](doc/Controller.md)
+- [Request](doc/Request.md)
+- [Model](doc/Model.md)
+- [View](doc/View.md)
+- [Response](doc/Response.md)
 
 # Demo
 
-The following Apify web application/service allows users to submit posts, vote and add comments.
-
-URL scheme:
-
-- http://apifydoc.com/posts
-- http://apifydoc.com/posts/new
-- http://apifydoc.com/posts/1/edit
-- http://apifydoc.com/posts/1/vote.json
-- http://apifydoc.com/posts/1/comment.json
-
-Representations:
-
-- http://apifydoc.com/posts
-- http://apifydoc.com/posts.json
-- http://apifydoc.com/posts.rss
-- http://apifydoc.com/posts/popular
-- http://apifydoc.com/posts/popular.json
-- http://apifydoc.com/posts/popular.rss
+(Currently no Demo is active)
 
 # Reporting bugs
 
@@ -83,14 +61,15 @@ The best ways to contribute are by finding and reporting bugs, writing tests for
 # License
 
 - Copyright (c) 2011, [Kewnode Ltd][8]. All rights reserved.
-- http://kewnode.com/apify/license
+- http://kewnode.com/apify/license ([ASL 1.1.][10] derived)
 
 [1]: https://dev.twitter.com/docs/api
 [2]: http://www.delicious.com/help/api
 [3]: http://www.scribd.com/developers
 [4]: http://upcoming.yahoo.com/services/api/
 [5]: http://zoom.it/pages/api/
-[6]: https://github.com/apify/apify-library/issues
+[6]: https://github.com/fedecarg/apify-library/issues
 [7]: https://twitter.com/fedecarg
 [8]: http://www.kewnode.com/
-[9]: https://github.com/apify/apify-library/blob/master/app/controllers/UsersController.php
+[9]: https://github.com/fedecarg/apify-library/blob/master/app/controllers/UsersController.php
+[10]: http://www.apache.org/licenses/LICENSE-1.1
