@@ -1,18 +1,18 @@
 # Introduction
 
-Apify is a small and powerful open source library that delivers new levels of developer 
-productivity by simplifying the creation of RESTful architectures. It helps development 
-teams deliver quality web services and applications in reduced amounts of time. If you are 
-familiar with the Zend Framework, then you already know how to use Apify. Take a look at 
+Apify is a small and powerful open source library that delivers new levels of developer
+productivity by simplifying the creation of RESTful architectures. It helps development
+teams deliver quality web services and applications in reduced amounts of time. If you are
+familiar with the Zend Framework, then you already know how to use Apify. Take a look at
 the [UsersController][9] class.
 
-Web services are a great way to extend your application, however, adding a Web API 
-to an existing web application can be a tedious and time-consuming task. Apify was 
-developed to ease that pain. It takes certain common patterns found in most web services 
-and abstract them so that you can quickly write Web APIs without having to write too much 
+Web services are a great way to extend your application, however, adding a Web API
+to an existing web application can be a tedious and time-consuming task. Apify was
+developed to ease that pain. It takes certain common patterns found in most web services
+and abstract them so that you can quickly write Web APIs without having to write too much
 code.
 
-You can see it in action here:   
+You can see it in action here:
 http://www.youtube.com/watch?v=7ptoB0yCsDo
 
 # Features
@@ -42,7 +42,24 @@ http://www.youtube.com/watch?v=7ptoB0yCsDo
 
 # Demo
 
-(Currently no Demo is active)
+The following Apify web application/service allows users to submit posts, vote and add comments.
+
+URL scheme:
+
+- http://apifydoc.com/posts
+- http://apifydoc.com/posts/new
+- http://apifydoc.com/posts/1/edit
+- http://apifydoc.com/posts/1/vote.json
+- http://apifydoc.com/posts/1/comment.json
+
+Representations:
+
+- http://apifydoc.com/posts
+- http://apifydoc.com/posts.json
+- http://apifydoc.com/posts.rss
+- http://apifydoc.com/posts/popular
+- http://apifydoc.com/posts/popular.json
+- http://apifydoc.com/posts/popular.rss
 
 # Reporting bugs
 
