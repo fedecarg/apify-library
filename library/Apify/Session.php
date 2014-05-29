@@ -20,7 +20,7 @@
  * @copyright   Copyright (c) 2011 Kewnode Ltd.
  * @version     $Id: $
  */
-class Session
+class Apify_Session
 {
     /**
      * @var boolean

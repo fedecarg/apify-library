@@ -10,15 +10,15 @@
  *
  * Subclassing Controller is optional. 
  */
-abstract class Controller
+abstract class Apify_Controller
 {
     /**
-     * @var null|View
+     * @var null|Apify_View
      */
     protected $view;
     
     /**
-     * @var null|Request
+     * @var null|Apify_Request
      */
     protected $request;
         
@@ -27,7 +27,7 @@ abstract class Controller
      * 
      * Initialize object. Method called by the Request object.
      *
-     * @param Request $request
+     * @param Apify_Request $request
      * @return void
      */
     public function init($request) 
@@ -38,7 +38,7 @@ abstract class Controller
      * 
      * Sets the Request object
      *
-     * @param Request $request
+     * @param Apify_Request $request
      * @return self
      */
     public function setRequest($request)
@@ -52,7 +52,7 @@ abstract class Controller
      * 
      * Returns the Request object
      *
-     * @return Request
+     * @return Apify_Request
      */
     public function getRequest()
     {
@@ -129,7 +129,7 @@ abstract class Controller
      * @param array $options Options to be used when redirecting
      * @return void
      */
-    protected function _redirect($uri, $code = Response::FOUND)
+    protected function _redirect($uri, $code = Apify_Response::FOUND)
     {
         $this->getRequest()->redirect($uri, $code);
     }
@@ -143,14 +143,14 @@ abstract class Controller
      */
     public function initView()
     {
-        $this->view = new View();
+        $this->view = new Apify_View();
         return $this->view;
     }
     
     /**
      * @param View $view
      */
-    public function setView(View $view)
+    public function setView(Apify_View $view)
     {
         $this->view = $view;
     }
@@ -158,7 +158,7 @@ abstract class Controller
     /**
      * Returns an single instance of the View object.
      * 
-     * @return null|View 
+     * @return null|Apify_View 
      */
     public function getView()
     {
@@ -186,6 +186,6 @@ abstract class Controller
      */
     public function getModel($name) 
     {
-        return Loader::getInstance()->getModel($name);
+        return Apify_Loader::getInstance()->getModel($name);
     }
 }

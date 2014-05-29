@@ -1,11 +1,11 @@
 <?php
-class IndexController extends Controller
+class IndexController extends Apify_Controller
 {
     /**
      * The init() method is called by the request object after the controller
      * is instantiated.
      * 
-     * @param Request $request
+     * @param Apify_Request $request
      * @return void
      * @throws Exception
      */
@@ -13,19 +13,19 @@ class IndexController extends Controller
     {
         if (! method_exists($this, $request->getAction().'Action')) {
             $message = sprintf('%s(): Intercepted call to "%s" action', __METHOD__, $request->getAction());
-            throw new Exception($message, Response::NOT_FOUND);
+            throw new Exception($message, Apify_Response::NOT_FOUND);
         }
     }
     
     /** 
      * @route GET /
      * 
-     * @param Request $request
+     * @param Apify_Request $request
      * @return View
      */
     public function indexAction($request)
     {
-        $view = new View();
+        $view = new Apify_View();
         $view->setLayout('main');
         
         return $view;
@@ -37,12 +37,12 @@ class IndexController extends Controller
      * @route GET /?method=example.request
      * @route GET /example/request
      * 
-     * @param Request $request
+     * @param Apify_Request $request
      * @return View
      */
     public function requestAction($request) 
     {
-        $view = new View();
+        $view = new Apify_View();
         $view->setLayout('main');
         
         $view->method = $request->getMethod();
@@ -63,15 +63,15 @@ class IndexController extends Controller
      * @route GET /example/response.json
      * @route GET /example/response.xml
      * 
-     * @param Request $request
-     * @return Response
+     * @param Apify_Request $request
+     * @return Apify_Response
      */
     public function responseAction($request) 
     {
         // accept JSON and XML
         $request->acceptContentTypes(array('json', 'xml'));
         
-        $response = new Response();
+        $response = new Apify_Response();
         $response->statusCode = $response->getCode();
         $response->contentType = $request->getContentType();
         $response->key = 'value';
@@ -85,8 +85,8 @@ class IndexController extends Controller
      * @route GET /?method=example.mixed
      * @route GET /example/mixed
      * 
-     * @param Request $request
-     * @return View|Response
+     * @param Apify_Request $request
+     * @return Apify_View|Apify_Response
      */
     public function mixedAction($request) 
     {
@@ -94,10 +94,10 @@ class IndexController extends Controller
         $request->acceptContentTypes(array('html', 'json', 'xml'));
         
         if ('html' === $request->getContentType()) {
-            $response = new View();
+            $response = new Apify_View();
             $response->setLayout('main');
         } else {
-            $response = new Response();
+            $response = new Apify_Response();
         }
         
         $response->method = $request->getMethod();

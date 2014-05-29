@@ -20,7 +20,7 @@
  * @copyright   Copyright (c) 2011 Kewnode Ltd.
  * @version     $Id: $
  */
-class StringUtil
+class Apify_StringUtil
 {
     /**
      * Converts a string to CamelCase.

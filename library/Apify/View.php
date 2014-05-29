@@ -20,7 +20,7 @@
  * @copyright   Copyright (c) 2011 Kewnode Ltd.
  * @version     $Id: $
  */
-class View
+class Apify_View
 {
     /**
      * @var null|string
@@ -66,7 +66,7 @@ class View
      * @param string $key
      * @param mixed $value
      * @return self
-     * @throws RuntimeException
+     * @throws Apify_RuntimeException
      */
     public function assign($key, $value)
     {
@@ -179,21 +179,21 @@ class View
     }
     
     /**
-     * @param Layout|string $layout
+     * @param Apify_Layout|string $layout
      * @return self
      */ 
     public function setLayout($layout) 
     {
-        if ($layout instanceof Layout) {
+        if ($layout instanceof Apify_Layout) {
             $this->layout = $layout;    
         } else {
-            $this->setLayout(new Layout($layout));
+            $this->setLayout(new Apify_Layout($layout));
         }
         return $this;
     }
  
     /**
-     * @return null|Layout
+     * @return null|Apify_Layout
      */ 
     public function getLayout() 
     {
@@ -243,7 +243,7 @@ class View
  * @copyright   Copyright (c) 2011 Kewnode Ltd.
  * @version     $Id: $
  */
-class Layout
+class Apify_Layout
 {
     /**
      * @var null|string

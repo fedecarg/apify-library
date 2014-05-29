@@ -20,7 +20,7 @@
  * @copyright   Copyright (c) 2011 Kewnode Ltd.
  * @version     $Id: $
  */
-class Response
+class Apify_Response
 {
     const OK                  = 200; // The request has succeeded.
     const CREATED             = 201; // The request has been fulfilled and resulted in a new resource being created.
@@ -112,7 +112,7 @@ class Response
 
     /**
      * @param int $code
-     * @return Response
+     * @return Apify_Response
      */
     public function setCode($code)
     {
@@ -153,7 +153,7 @@ class Response
 
     /**
      * @param Exception $e
-     * @return Response
+     * @return Apify_Response
      * @throws Exception
      */
     public function setException(Exception $e)
@@ -218,7 +218,7 @@ class Response
     
     /**
      * @param string $type
-     * @return Response
+     * @return Apify_Response
      * @throws RuntimeException
      */
     public function setContentTypeHeader($type)
@@ -301,7 +301,7 @@ class Response
     /**
      * @param string $key
      * @param mixed $value
-     * @return Response
+     * @return Apify_Response
      * @throws RuntimeException
      */
     public function assign($key, $value)
@@ -312,7 +312,7 @@ class Response
             $this->data = new stdClass();
         }
         
-        if (is_object($value) && $value instanceof Entity) {
+        if (is_object($value) && $value instanceof Apify_Entity) {
             // use dynamic properties
             $this->data->$key = $value->toObject();
         } else {

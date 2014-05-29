@@ -20,7 +20,7 @@
  * @copyright   Copyright (c) 2011 Kewnode Ltd.
  * @version     $Id: $
  */
-class Model
+class Apify_Model
 {
     /**
      * @var Database
@@ -50,9 +50,9 @@ class Model
     /**
      * Class constructor.
      * 
-     * @param Database $db
+     * @param Apify_Database $db
      */
-    public function __construct(Database $db)
+    public function __construct(Apify_Database $db)
     {
         $this->db = $db;
     }
@@ -61,7 +61,7 @@ class Model
      * Sets default option values.
      *
      * @param array $options
-     * @return Model 
+     * @return Apify_Model 
      */
     public function setDefaultOptions(array $options)
     {
@@ -88,7 +88,7 @@ class Model
      * Sets the table name.
      * 
      * @param string $name
-     * @return Model
+     * @return Apify_Model
      */
     public function setTable($name)
     {
@@ -108,7 +108,7 @@ class Model
      * Sets the entity class name.
      * 
      * @param string $name
-     * @return Model
+     * @return Apify_Model
      */
     public function setEntity($name)
     {
@@ -151,7 +151,7 @@ class Model
     /**
      * @param int $id
      * @return object|false
-     * @throws ModelException
+     * @throws Apify_ModelException
      */
     public function find($id)
     {
@@ -162,14 +162,14 @@ class Model
             $stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $this->entity);
             return $stmt->fetch();
         } catch (Exception $e) {
-            throw new ModelException($e->getMessage());
+            throw new Apify_ModelException($e->getMessage());
         }
     }
     
     /**
      * @param array $condition
      * @return object|false
-     * @throws ModelException
+     * @throws Apify_ModelException
      */
     public function findBy(array $condition)
     {
@@ -188,14 +188,14 @@ class Model
             $stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $this->entity);
             return $stmt->fetch();
         } catch (Exception $e) {
-            throw new ModelException($e->getMessage());
+            throw new Apify_ModelException($e->getMessage());
         }
     }
     
     /**
      * @param array $options
      * @return array|false
-     * @throws ModelException
+     * @throws Apify_ModelException
      */
     public function findAll(array $options = array())
     {
@@ -208,7 +208,7 @@ class Model
             $stmt = $this->execute($sql, array($options['sort'], $options['order']));
             return $stmt->fetchAll();
         } catch (Exception $e) {
-            throw new ModelException($e->getMessage());
+            throw new Apify_ModelException($e->getMessage());
         } 
     }
     
@@ -216,7 +216,7 @@ class Model
      * @param array $condition
      * @param array $options
      * @return object|false
-     * @throws ModelException
+     * @throws Apify_ModelException
      */
     public function findAllBy(array $condition, array $options = array())
     {
@@ -238,16 +238,16 @@ class Model
             $stmt = $this->execute($sql, $values);
             return $stmt->fetchAll();
         } catch (Exception $e) {
-            throw new ModelException($e->getMessage());
+            throw new Apify_ModelException($e->getMessage());
         } 
     }
     
     /**
-     * @param Entity $entity
+     * @param Apify_Entity $entity
      * @return mixed
-     * @throws ModelException
+     * @throws Apify_ModelException
      */
-    public function save(Entity $entity)
+    public function save(Apify_Entity $entity)
     {
         try {
             if (null === $entity->id) {
@@ -256,15 +256,15 @@ class Model
                 return $this->update($entity);
             }
         } catch (Exception $e) {
-            throw new ModelException($e->getMessage());
+            throw new Apify_ModelException($e->getMessage());
         }
     }
     
     /**
-     * @param Entity $entity
+     * @param Apify_Entity $entity
      * @return int Returns the ID of the last inserted row
      */
-    public function insert(Entity $entity)
+    public function insert(Apify_Entity $entity)
     {
         $vars = $entity->toArray();
         unset($vars['id']);
@@ -295,10 +295,10 @@ class Model
     }
         
     /**
-     * @param Entity $entity
+     * @param Apify_Entity $entity
      * @return int Returns the number of rows affected by the query 
      */
-    public function update(Entity $entity)
+    public function update(Apify_Entity $entity)
     {
         $vars = $entity->toArray();
         unset($vars['id'], $vars['created_at']);
@@ -341,7 +341,7 @@ class Model
         try {
             $stmt = $this->execute($sql, array((int)$id));
         } catch (Exception $e) {
-            throw new ModelException($e->getMessage());
+            throw new Apify_ModelException($e->getMessage());
         }
         
         return ($stmt instanceof PDOStatement) ? $stmt->rowCount() : false;
@@ -351,7 +351,7 @@ class Model
      * Returns the total number of rows in the last executed query.
      *
      * @return int
-     * @throws ModelException
+     * @throws Apify_ModelException
      */
     public function getTotalRows()
     {
@@ -365,7 +365,7 @@ class Model
             }
             return $rowsCount;
         } catch (Exception $e) {
-            throw new ModelException($e->getMessage());
+            throw new Apify_ModelException($e->getMessage());
         }
     }
     
@@ -486,7 +486,7 @@ class Model
 /**
  * Base entity class
  */
-class Entity
+class Apify_Entity
 {
     private static $updated = array();
     
@@ -515,9 +515,9 @@ class Entity
     protected function setProperty($name, $value) 
     {
         if (! is_string($name)) {
-            throw new EntityException('Invalid property name: '. $name);
+            throw new Apify_EntityException('Invalid property name: '. $name);
         } else if (! property_exists($this, $name)) {
-            throw new EntityException('Property not defined: ' . $name);
+            throw new Apify_EntityException('Property not defined: ' . $name);
         }
         
         $setterMethod = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $name)));

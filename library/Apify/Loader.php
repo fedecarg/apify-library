@@ -20,7 +20,7 @@
  * @copyright   Copyright (c) 2011 Kewnode Ltd.
  * @version     $Id: $
  */
-class Loader
+class Apify_Loader
 {
     /**
      * @var array $registry
@@ -28,12 +28,12 @@ class Loader
     private $registry = array();
 
     /**
-     * @var Loader Singleton instance
+     * @var Apify_Loader Singleton instance
      */
     private static $instance = null;
     
     /**
-     * @return Loader
+     * @return Apify_Loader
      */
     public static function getInstance()
     {
@@ -83,7 +83,7 @@ class Loader
     /**
      * @param string $name Controller name
      * @return object|null
-     * @throws LoaderException
+     * @throws Apify_LoaderException
      */
     public function getController($name)
     {
@@ -91,7 +91,7 @@ class Loader
         if (! $this->isRegistered($className)) {
             if (! $this->includeFile($className, 'controllers')) {
                 $m = sprintf('Controller "%s" not found', $name);
-                throw new LoaderException($m, Response::NOT_FOUND);
+                throw new Apify_LoaderException($m, Apify_Response::NOT_FOUND);
             }
             $this->add(new $className());
         }
@@ -100,7 +100,7 @@ class Loader
 
     /**
      * @param string $entityName
-     * @return Model
+     * @return Apify_Model
      */
     public function getModel($entityName)
     {
@@ -109,14 +109,14 @@ class Loader
             if ($this->includeFile($modelName, 'models')) {
                 $model = new $modelName($this->getDatabase());
             } else {
-                $model = new Model($this->getDatabase());
+                $model = new Apify_Model($this->getDatabase());
             }
             
             $this->includeFile($entityName, 'models');
             $model->setEntity($entityName);
             
             if (null === $model->getTable()) {
-                $tableName = $this->get('StringUtil')->underscore($entityName);
+                $tableName = $this->get('Apify_StringUtil')->underscore($entityName);
                 $model->setTable($tableName);
             } 
             
@@ -128,7 +128,7 @@ class Loader
     /**
      * @param string $name Service name
      * @return Service
-     * @throws LoaderException
+     * @throws Apify_LoaderException
      */
     public function getService($name)
     {
@@ -136,7 +136,7 @@ class Loader
         if (! $this->isRegistered($className)) {
             if (! $this->includeFile($className, 'services')) {
                 $m = sprintf('Service "%s" not found', $name);
-                throw new LoaderException($m, Response::NOT_FOUND);
+                throw new Apify_LoaderException($m, Apify_Response::NOT_FOUND);
             } else {
                 $obj = new $className();
             }
@@ -146,20 +146,20 @@ class Loader
     }
     
     /**
-     * @return Database
-     * @throws LoaderException
+     * @return Apify_Database
+     * @throws Apify_LoaderException
      */
     public function getDatabase()
     {
-        if (! $this->isRegistered('Database')) {
+        if (! $this->isRegistered('Apify_Database')) {
             try {
-                $obj = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASS);
+                $obj = new Apify_Database(DB_HOST, DB_NAME, DB_USER, DB_PASS);
             } catch (Exception $e) {
-                throw new LoaderException($e->getMessage());
+                throw new Apify_LoaderException($e->getMessage());
             }
             $this->add($obj);
         }
-        return $this->get('Database');
+        return $this->get('Apify_Database');
     }
         
     /**

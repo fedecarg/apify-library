@@ -19,14 +19,14 @@ Clean URL scheme:
 
 To implement a clean URL scheme you need to enable URL rewriting and add at least one route:
 
-    $routes[] = new Route('/users/:id', 
+    $routes[] = new Apify_Route('/users/:id', 
         array(
             'controller' => 'users',
             'action'     => 'show'
         )
     );
 
-    $routes[] = new Route('/users/:id/:action', 
+    $routes[] = new Apify_Route('/users/:id/:action', 
         array(
             'controller' => 'users'
         ),
@@ -36,7 +36,7 @@ To implement a clean URL scheme you need to enable URL rewriting and add at leas
         )
     );
 
-    $request = new Request();
+    $request = new Apify_Request();
     $request->enableUrlRewriting();
     $request->addRoutes($routes);
     $request->dispatch();
@@ -59,7 +59,7 @@ Clean URL scheme:
 
 To enable this functionality:
 
-    $request = new Request();
+    $request = new Apify_Request();
     $request->enableUrlRewriting();
     $request->enableRestfulMapping();
     $request->dispatch();
@@ -103,7 +103,7 @@ And, in your index.php file:
     define('APP_DIR',  dirname(__FILE__) . '/' . $_SERVER['APP_NAME']);
         
     try {
-        $request = new Request();
+        $request = new Apify_Request();
         $request->setUrlSegment($_SERVER['URL_SEGMENT']);
         $request->enableUrlRewriting();
         $request->dispatch();
@@ -142,20 +142,20 @@ If RESTful Mapping is enabled, send a standard Accept header in your request (te
 ### Acceptable Formats
 Action methods can use the $request->acceptContentTypes() method to specify certain media types which are acceptable for the response.
 
-    class UsersController extends Controller
+    class UsersController extends Apify_Controller
     {
         /** 
          * Route /users.json
          * Route /users.xml
          *
-         * @param Request $request
-         * @return Response
+         * @param Apify_Request $request
+         * @return Apify_Response
          */
         public function indexAction($request)
         {
             $request->acceptContentTypes(array('json', 'xml'));
 
-            $response = new Response();
+            $response = new Apify_Response();
             $response->users = array('paul', 'adrian', 'adam');
 
             return $response;
@@ -164,7 +164,7 @@ Action methods can use the $request->acceptContentTypes() method to specify cert
 
 You can also make JSON the default format:
 
-    class UsersController extends Controller
+    class UsersController extends Apify_Controller
     {
         /** 
          * Route /users
@@ -177,7 +177,7 @@ You can also make JSON the default format:
         {
             $request->setContentType('json');
 
-            $response = new Response();
+            $response = new Apify_Response();
             $response->users = array('paul', 'adrian', 'adam');
 
             return $response;

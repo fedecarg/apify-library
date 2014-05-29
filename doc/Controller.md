@@ -14,7 +14,7 @@ The full request object is injected via the action method and is primarily used 
 
 ### Controller
 
-    class UsersController extends Controller
+    class UsersController extends Apify_Controller
     {
         /**
          * GET /users/1.json
@@ -25,7 +25,7 @@ The full request object is injected via the action method and is primarily used 
         	// only accept JSON and XML
             $request->acceptContentTypes(array('json', 'xml'));
 
-            $response = new Response();        
+            $response = new Apify_Response();        
             $response->id = $request->getParam('id');
             $response->api_key = $request->getParam('api_key');
             
@@ -35,7 +35,7 @@ The full request object is injected via the action method and is primarily used 
 
 You can customize instantiation using the init() method, which is called by the request object before calling the action method:
 
-    class UsersController extends Controller
+    class UsersController extends Apify_Controller
     {
         public function init($request)
         {
@@ -52,7 +52,7 @@ You can customize instantiation using the init() method, which is called by the 
 
         public function showAction($request)
         {
-            $response = new Response();        
+            $response = new Apify_Response();        
             $response->id = $request->getParam('id');
             $response->api_key = $request->getParam('api_key');
             
@@ -66,13 +66,13 @@ When Apify returns error messages, it does so in your requested format.
 
 An error from a JSON request might look like this:
 
-    class UsersController extends Controller
+    class UsersController extends Apify_Controller
     {
         public function indexAction($request)
         {
             $request->acceptContentTypes(array('json', 'xml'));
 
-            $response = new Response();
+            $response = new Apify_Response();
             if (! $request->hasParam('api_key')) {
                 throw new Exception('Missing parameter: api_key', Response::FORBIDDEN);
             }

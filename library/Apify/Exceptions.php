@@ -20,11 +20,11 @@
  * @copyright   Copyright (c) 2011 Kewnode Ltd.
  * @version     $Id: $
  */
-class LoaderException extends Exception {}
-class RequestException extends Exception {}
-class ResponseException extends Exception {}
-class RendererException extends Exception {}
-class ControllerException extends Exception {}
-class ModelException extends Exception {}
-class EntityException extends Exception {}
-class ValidationException extends Exception {}
+class Apify_LoaderException extends Exception {}
+class Apify_RequestException extends Exception {}
+class Apify_ResponseException extends Exception {}
+class Apify_RendererException extends Exception {}
+class Apify_ControllerException extends Exception {}
+class Apify_ModelException extends Exception {}
+class Apify_EntityException extends Exception {}
+class Apify_ValidationException extends Exception {}

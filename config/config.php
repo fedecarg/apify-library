@@ -13,7 +13,7 @@ if (DEBUG) {
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'apify');
 define('DB_USER', 'root');
-define('DB_PASS', 'root');
+define('DB_PASS', '');
 
 // Default timezone used by all date/time functions
 date_default_timezone_set('Europe/London');
@@ -28,16 +28,17 @@ if (get_magic_quotes_runtime()) {
 }
 
 // Required files
-require_once ROOT_DIR . '/library/Exceptions.php';
-require_once ROOT_DIR . '/library/Loader.php';
-require_once ROOT_DIR . '/library/Model.php';
-require_once ROOT_DIR . '/library/Router.php';
-// ZF base controller (optional)
-require_once APP_DIR . '/controllers/Controller.php';
+require_once ROOT_DIR . '/library/Apify/Exceptions.php';
+require_once ROOT_DIR . '/library/Apify/Loader.php';
 
 // Include path
-set_include_path(ROOT_DIR . '/library' . PATH_SEPARATOR . APP_DIR . '/models');
-spl_autoload_register(array('Loader', 'autoload'));
+$includePath = get_include_path();
+$includePath .= PATH_SEPARATOR . ROOT_DIR . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR;
+$includePath .= PATH_SEPARATOR . APP_DIR . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR;
+$includePath .= PATH_SEPARATOR . APP_DIR . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR;
+set_include_path($includePath);
+
+spl_autoload_register(array('Apify_Loader', 'autoload'));
 
 
 
