@@ -20,7 +20,7 @@
  * @copyright   Copyright (c) 2011 Kewnode Ltd.
  * @version     $Id: $
  */
-class Database
+class Apify_Database
 {
     /**
      * @var $pdo PDO 

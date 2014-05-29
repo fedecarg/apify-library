@@ -6,13 +6,13 @@ Apify supports routing arbitrary URLs to actions allowing you to quickly build w
 
 Building a web application can be as simple as adding a few methods to your controller:
 
-    class PostsController extends Controller
+    class PostsController extends Apify_Controller
     {
         /** 
          * Route /posts/:id
          *
-         * @param Request $request
-         * @return View
+         * @param Apify_Request $request
+         * @return Apify_View
          */
         public function showAction($request)
         {
@@ -33,7 +33,7 @@ Building a web application can be as simple as adding a few methods to your cont
          * Route /posts/create
          *
          * @param Request $request
-         * @return View|null
+         * @return Apify_View|null
          */
         public function createAction($request)
         {
@@ -47,7 +47,7 @@ Building a web application can be as simple as adding a few methods to your cont
                     'title' => $request->getPost('title'), 
                     'text'  => $request->getPost('text')
                 ));            
-            } catch (ValidationException $e) {
+            } catch (Apify_ValidationException $e) {
                 $view->error = $e->getMessage();
                 return $view;
             }
@@ -61,7 +61,7 @@ Building a web application can be as simple as adding a few methods to your cont
 
 You can add validation to your entity class to ensure that the values sent by the user are correct before saving them to the database:
 
-    class Post extends Entity
+    class Post extends Apify_Entity
     {
         protected $id;
         protected $title;
@@ -72,7 +72,7 @@ You can add validation to your entity class to ensure that the values sent by th
         {
             $value = htmlspecialchars(trim($value), ENT_QUOTES);
             if (empty($value) || strlen($value) < 3) {
-                throw new ValidationException('Invalid title');
+                throw new Apify_ValidationException('Invalid title');
             }
             $this->title = $title;
         }
@@ -88,7 +88,7 @@ You can add validation to your entity class to ensure that the values sent by th
 
 Apify provides a slimmed down version of the Zend Framework router:
 
-    $routes[] = new Route('/posts/:id', 
+    $routes[] = new Apify_Route('/posts/:id', 
         array(
             'controller' => 'posts',
             'action'     => 'show'
@@ -97,7 +97,7 @@ Apify provides a slimmed down version of the Zend Framework router:
             'id'         => '\d+'
         )
     );
-    $routes[] = new Route('/posts/create', 
+    $routes[] = new Apify_Route('/posts/create', 
         array(
             'controller' => 'posts', 
             'action'     => 'create'

@@ -1,12 +1,12 @@
 <?php
-class UsersController extends Controller
+class UsersController extends Apify_Controller
 {
     /**
      * @route GET /?method=users
      * @route GET /users
      * 
-     * @param Request $request
-     * @return Response|View
+     * @param Apify_Request $request
+     * @return Apify_Response|View
      */
     public function indexAction($request)
     {
@@ -14,10 +14,10 @@ class UsersController extends Controller
         $request->acceptContentTypes(array('html', 'json', 'xml'));
         
         if ('html' == $request->getContentType()) {
-            $response = new View();
+            $response = new Apify_View();
             $response->setLayout('main');
         } else {
-            $response = new Response();
+            $response = new Apify_Response();
         }
         
         $response->users = $this->getModel('User')->findAll();
@@ -43,14 +43,14 @@ class UsersController extends Controller
         $id = $request->getParam('id');
         $user = is_numeric($id) ? $model->find($id) : $model->findBy(array('username'=>$id));
         if (! $user) {
-            throw new Exception('User not found', Response::NOT_FOUND);
+            throw new Exception('User not found', Apify_Response::NOT_FOUND);
         }
         
         if ('html' == $request->getContentType()) {
-            $response = new View();
+            $response = new Apify_View();
             $response->setLayout('main');
         } else {
-            $response = new Response();
+            $response = new Apify_Response();
             $response->setEtagHeader(md5('/users/' . $user->id));
         }
         
@@ -62,15 +62,15 @@ class UsersController extends Controller
      * @route POST /?method=users.create&format=json
      * @route POST /users/create.json
      * 
-     * @param Request $request
-     * @return Response
+     * @param Apify_Request $request
+     * @return Apify_Response
      * @throws Exception
      */
     public function createAction($request)
     {
         $request->acceptContentTypes(array('json'));
         if ('POST' != $request->getMethod()) {
-            throw new Exception('HTTP method not allowed', Response::NOT_ALLOWED);
+            throw new Exception('HTTP method not allowed', Apify_Response::NOT_ALLOWED);
         }
         
         try {
@@ -80,17 +80,17 @@ class UsersController extends Controller
                 'email'    => $request->getPost('email'), 
                 'gender'   => $request->getPost('gender')
             ));
-        } catch (ValidationException $e) {
-            throw new Exception($e->getMessage(), Response::OK);
+        } catch (Apify_ValidationException $e) {
+            throw new Exception($e->getMessage(), Apify_Response::OK);
         }
         
         $id = $this->getModel('User')->save($user);
         if (! is_numeric($id)) {
-            throw new Exception('An error occurred while creating user', Response::OK);
+            throw new Exception('An error occurred while creating user', Apify_Response::OK);
         }
         
-        $response = new Response();
-        $response->setCode(Response::CREATED);
+        $response = new Apify_Response();
+        $response->setCode(Apify_Response::CREATED);
         $response->setEtagHeader(md5('/users/' . $id));
         
         return $response;
@@ -100,15 +100,15 @@ class UsersController extends Controller
      * @route POST /?method=users.update&id=1&format=json
      * @route POST /users/1/update.json
      * 
-     * @param Request $request
-     * @return Response
+     * @param Apify_Request $request
+     * @return Apify_Response
      * @throws Exception
      */
     public function updateAction($request)
     {
         $request->acceptContentTypes(array('json'));
         if ('POST' != $request->getMethod()) {
-            throw new Exception('HTTP method not supported', Response::NOT_ALLOWED);
+            throw new Exception('HTTP method not supported', Apify_Response::NOT_ALLOWED);
         }        
         
         $id = $request->getParam('id');
@@ -116,26 +116,26 @@ class UsersController extends Controller
         $model = $this->getModel('User');
         $user = $model->find($id);
         if (! $user) {
-            throw new Exception('User not found', Response::NOT_FOUND);
+            throw new Exception('User not found', Apify_Response::NOT_FOUND);
         }
         
         try {
             $user->username = $request->getPost('username');            
-        } catch (ValidationException $e) {
-            throw new Exception($e->getMessage(), Response::OK);
+        } catch (Apify_ValidationException $e) {
+            throw new Exception($e->getMessage(), Apify_Response::OK);
         }
         $model->save($user);
         
         // return 200 OK
-        return new Response();
+        return new Apify_Response();
     }
     
     /**
      * @route GET /?method=users.destroy&id=1&format=json
      * @route GET /users/1/destroy.json
      * 
-     * @param Request $request
-     * @return Response
+     * @param Apify_Request $request
+     * @return Apify_Response
      * @throws Exception
      */
     public function destroyAction($request)
@@ -146,11 +146,11 @@ class UsersController extends Controller
         $model = $this->getModel('User');
         $user = $model->find($id);
         if (! $user) {
-            throw new Exception('User not found', Response::NOT_FOUND);
+            throw new Exception('User not found', Apify_Response::NOT_FOUND);
         }
         $model->delete($user->id);
         
         // return 200 OK
-        return new Response();
+        return new Apify_Response();
     }
 }

@@ -20,7 +20,7 @@
  * @copyright   Copyright (c) 2011 Kewnode Ltd.
  * @version     $Id: $
  */
-class Request
+class Apify_Request
 {
     const CONTROLLER_INDEX  = 'Index';
     
@@ -46,7 +46,7 @@ class Request
     protected $isRestfulMappingEnabled = false;
         
     /**
-     * @var null|Router
+     * @var null|Apify_Router
      */
     protected $router;
     
@@ -110,7 +110,7 @@ class Request
     
     /**
      * @params string $keyword
-     * @return Request
+     * @return Apify_Request
      */
     public function setUrlKeyword($keyword)
     {
@@ -120,7 +120,7 @@ class Request
     
     /**
      * @params int $segment
-     * @return Request
+     * @return Apify_Request
      */
     public function setUrlSegment($segment)
     {
@@ -131,7 +131,7 @@ class Request
     }
     
     /**
-     * @return Request
+     * @return Apify_Request
      */
     public function enableRestfulMapping()
     {
@@ -140,7 +140,7 @@ class Request
     }
     
     /**
-     * @return Request
+     * @return Apify_Request
      */
     public function enableUrlRewriting()
     {
@@ -150,19 +150,19 @@ class Request
     
     /**
      * @param array $routes
-     * @return Request
+     * @return Apify_Request
      */
     public function addRoutes(array $routes)
     {
-        if (! ($this->router instanceof Router)) {
-            $this->router = new Router($this->getParams());
+        if (! ($this->router instanceof Apify_Router)) {
+            $this->router = new Apify_Router($this->getParams());
         }
         $this->router->addRoutes($routes);
         return $this;
     }
     
     /**
-     * @return Router
+     * @return Apify_Router
      */
     public function getRouter()
     {
@@ -175,7 +175,7 @@ class Request
     public function setController($name)
     {
         if (null !== $name && '' !== $name) {
-            $strUtil = Loader::getInstance()->get('StringUtil');
+            $strUtil = Apify_Loader::getInstance()->get('Apify_StringUtil');
             $this->controller = $strUtil->camelize($name);
         }
     }
@@ -194,7 +194,7 @@ class Request
     public function setAction($name)
     {
         if (null !== $name && '' !== $name) {
-            $strUtil = Loader::getInstance()->get('StringUtil');
+            $strUtil = Apify_Loader::getInstance()->get('Apify_StringUtil');
             $name = $strUtil->camelize($name);
             $name{0} = strtolower($name{0});
             $this->action = $name;
@@ -217,7 +217,7 @@ class Request
      */
     public function dispatch($controllerName = null, $actionName = null)
     {
-        if ($this->isUrlRewritingEnabled && $this->router instanceof Router) {
+        if ($this->isUrlRewritingEnabled && $this->router instanceof Apify_Router) {
             $this->getRouter()->route($this);
         } else if ($this->isUrlRewritingEnabled) {
             $this->parseUrl();
@@ -231,7 +231,7 @@ class Request
         $response = $this->handleRequest($controllerName, $actionName);
         $this->setResponse($response);
         
-        $renderer = new Renderer();
+        $renderer = new Apify_Renderer();
         $renderer->render($this);
     }
     
@@ -245,15 +245,15 @@ class Request
      * @param string $controllerName
      * @param string $actionName 
      * @return mixed
-     * @throws RequestException
+     * @throws Apify_RequestException
      * @throws RuntimeException
      */
     public function handleRequest($controllerName, $actionName)
     {    
         try {
-            $controller = Loader::getInstance()->getController($controllerName);
-        } catch (LoaderException $e) {
-            throw new RequestException($e->getMessage(), Response::NOT_FOUND);
+            $controller = Apify_Loader::getInstance()->getController($controllerName);
+        } catch (Apify_LoaderException $e) {
+            throw new Apify_RequestException($e->getMessage(), Apify_Response::NOT_FOUND);
         }
         
         if (method_exists($controller, 'setRequest')) {
@@ -268,7 +268,7 @@ class Request
         if (! isset($controllerResponse)) {
             if (! method_exists($controller, $actionName . 'Action')) {
                 $m = sprintf('Method "%s" not found', $actionName);
-                throw new RequestException($m, Response::NOT_FOUND);
+                throw new Apify_RequestException($m, Apify_Response::NOT_FOUND);
             }
             $controllerResponse = $controller->{$actionName . 'Action'}($this);
         }
@@ -276,12 +276,12 @@ class Request
         $this->setController($controllerName);
         $this->setAction($actionName);
         
-        if ($controllerResponse instanceof View) {
+        if ($controllerResponse instanceof Apify_View) {
             $this->setContentType('html');
-            $response = new Response();
+            $response = new Apify_Response();
             $response->setView($controllerResponse);
             return $response;      
-        } else if ($controllerResponse instanceof Response) {
+        } else if ($controllerResponse instanceof Apify_Response) {
             return $controllerResponse;
         } else {        
             $m = sprintf('Method "%s::%sAction()" contains an invalid return type', $controllerName, $actionName);
@@ -301,7 +301,7 @@ class Request
             throw $e;
         }
         
-        $response = new Response();
+        $response = new Apify_Response();
         $response->setException($e);
         $this->setResponse($response);
         
@@ -341,7 +341,7 @@ class Request
             $this->setParam('id', $parts[1]);
             $action = $methods[$method];
         } else {
-            throw new RequestException('Method not allowed', Response::NOT_ALLOWED);
+            throw new Apify_RequestException('Method not allowed', Apify_Response::NOT_ALLOWED);
         }
         
         $params = array_slice($parts, $offset);
@@ -359,7 +359,7 @@ class Request
     
     /**
      * @return void
-     * @throws RequestException
+     * @throws Apify_RequestException
      */
     public function parseQueryString()
     {
@@ -383,7 +383,7 @@ class Request
             } else if ($this->hasParam('id') && isset($methods[$method])) {
                 $action = $methods[$method];
             } else {
-                throw new RequestException('Method not allowed', Response::NOT_ALLOWED);
+                throw new Apify_RequestException('Method not allowed', Apify_Response::NOT_ALLOWED);
             }
         }
         
@@ -414,7 +414,7 @@ class Request
      * 
      * @return array
      * @throws RuntimeException
-     * @throws RequestException
+     * @throws Apify_RequestException
      */
     public function getUrlParts()
     {
@@ -554,7 +554,7 @@ class Request
     /**
      * @param string $key
      * @param mixed $value
-     * @return Request
+     * @return Apify_Request
      */
     public function setParam($key, $value)
     {
@@ -573,7 +573,7 @@ class Request
 
     /**
      * @param array $params
-     * @return Request
+     * @return Apify_Request
      */
     public function setParams(array $params)
     {
@@ -591,7 +591,7 @@ class Request
     
     /**
      * @param array $params
-     * @return Request
+     * @return Apify_Request
      */
     public function setPost(array $params)
     {
@@ -631,7 +631,7 @@ class Request
         
     /**
      * @param string $type
-     * @return Request
+     * @return Apify_Request
      */
     public function setContentType($type)
     {
@@ -660,13 +660,13 @@ class Request
      * 
      * @param array $types
      * @return void
-     * @throws RequestException
+     * @throws Apify_RequestException
      */
     public function acceptContentTypes(array $types)
     {
         if (! in_array($this->getContentType(), $types)) {
             $this->setContentType('html');
-            throw new RequestException('Not Acceptable', Response::NOT_ACCEPTABLE);   
+            throw new Apify_RequestException('Not Acceptable', Apify_Response::NOT_ACCEPTABLE);   
         }
     }
     
@@ -678,7 +678,7 @@ class Request
         $accept = explode(',', $_SERVER['HTTP_ACCEPT']);
         $type = null;
         if (isset($accept[0])) {
-            $response = new Response();
+            $response = new Apify_Response();
             $mimeTypes = $response->getMimeTypes();
             $type = array_search($accept[0], $mimeTypes);
             if (false === $type) {
@@ -689,17 +689,17 @@ class Request
     }
     
     /**
-     * @return Session
+     * @return Apify_Session
      */
     public function getSession()
     {
-        return Loader::getInstance()->get('Session');
+        return Apify_Loader::getInstance()->get('Session');
     }
     
     /**
      * Return the Response object
      *
-     * @return Response
+     * @return Apify_Response
      */
     public function getResponse()
     {
@@ -709,10 +709,10 @@ class Request
     /**
      * Set the Response object
      *
-     * @param Response $response
+     * @param Apify_Response $response
      * @return self
      */
-    public function setResponse(Response $response)
+    public function setResponse(Apify_Response $response)
     {
         $this->response = $response;
         return $this;
@@ -723,9 +723,9 @@ class Request
      * @param integer $code HTTP status codes
      * @return void
      */
-    public function redirect($uri, $code = Response::FOUND)
+    public function redirect($uri, $code = Apify_Response::FOUND)
     {
-        $response = new Response();
+        $response = new Apify_Response();
         $response->setCode($code);
         $response->addHeader('Location: ' . $uri);
         $response->sendHeaders();

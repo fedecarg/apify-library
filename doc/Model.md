@@ -6,7 +6,7 @@ The model has a central position in a web application. It’s the domain-specifi
 
 An Entity instance represents a row in the database. In the example below, "User" is an entity class which maps object properties to database table fields. For example:
 
-    class User extends Entity 
+    class User extends Apify_Entity 
     {
         protected $id;
         protected $username;
@@ -24,7 +24,7 @@ Properties are defined as protected. If you add a "created_at" or "updated_at" p
 
 You can define the getter and setter methods yourself. If a method exists Apify will use the existing accessors.
 
-    class User extends Entity 
+    class User extends Apify_Entity 
     {
         protected $id;
         protected $email;
@@ -37,7 +37,7 @@ You can define the getter and setter methods yourself. If a method exists Apify 
 
 By default, the entity will be persisted to a table with the same name as the class name ("user"). In order to change that, you can call the setTable() method:
 
-    class UsersController extends Controller
+    class UsersController extends Apify_Controller
     {
         public function showAction($request)
         {
@@ -46,7 +46,7 @@ By default, the entity will be persisted to a table with the same name as the cl
             // map the entity "User" to the table "users"
             $model = $this->getModel('User')->setTable('users');
             
-            $response = new Response();
+            $response = new Apify_Response();
             $response->user = $model->find($id);
             
             return $response;
@@ -55,7 +55,7 @@ By default, the entity will be persisted to a table with the same name as the cl
 
 Or you can create a Model class and overwrite the $table property as follows:
 
-    class UserModel extends Model
+    class UserModel extends Apify_Model
     {
         // user-defined table
         protected $table = 'users';
@@ -67,13 +67,13 @@ Or you can create a Model class and overwrite the $table property as follows:
         }
     }
 
-    class UsersController extends Controller
+    class UsersController extends Apify_Controller
     {
         public function showAction($request)
         {
             $username = $request->getParam('username');
 
-            $response = new Response();
+            $response = new Apify_Response();
             $response->user = $this->getModel('User')->findByUsername($username);
             
             return $response;
@@ -84,7 +84,7 @@ Or you can create a Model class and overwrite the $table property as follows:
 
 Validating data before you send updates to the underlying database is a good practice that reduces errors:
 
-    class User extends Entity 
+    class User extends Apify_Entity 
     {
         protected $id;
         protected $email;
@@ -93,7 +93,7 @@ Validating data before you send updates to the underlying database is a good pra
         public function setEmail($value)
         {
             if (! filter_var($value, FILTER_VALIDATE_EMAIL)) {
-                throw new ValidationException('Invalid email address');
+                throw new Apify_ValidationException('Invalid email address');
             }
             $this->email = trim($value);
         }
@@ -101,7 +101,7 @@ Validating data before you send updates to the underlying database is a good pra
 
 Because the validation is performed inside the class an exception is thrown if the value causes validation to fail. You can implement error handling for the code in your controller:
 
-    class UsersController extends Controller
+    class UsersController extends Apify_Controller
     {    
         public function updateAction($request)
         {
@@ -118,11 +118,11 @@ Because the validation is performed inside the class an exception is thrown if t
             }
             
             try {
-                $user->email = $request->getPost('email'); // throws ValidationException
-                $model->save($user); // throws ModelException
-            } catch (ValidationException $e) {
+                $user->email = $request->getPost('email'); // throws Apify_ValidationException
+                $model->save($user); // throws Apify_ModelException
+            } catch (Apify_ValidationException $e) {
                 // do something
-            } catch (ModelException $e) {
+            } catch (Apify_ModelException $e) {
                 // do something
             }
             

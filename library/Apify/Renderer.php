@@ -20,29 +20,29 @@
  * @copyright   Copyright (c) 2011 Kewnode Ltd.
  * @version     $Id: $
  */
-class Renderer
+class Apify_Renderer
 {
     /**
-     * @param Request $request
+     * @param Apify_Request $request
      * @return void
      * @throws RendererException
      */
-    public function render(Request $request)
+    public function render(Apify_Request $request)
     {
         $response = $request->getResponse();
         
         $contentType = $request->getContentType();
         if ('json' === $contentType) {
-            $renderer = new JsonRenderer();
+            $renderer = new Apify_JsonRenderer();
         } else if ('xml' === $contentType) {
-            $renderer = new XmlRenderer();
+            $renderer = new Apify_XmlRenderer();
         } else if ('rss' === $contentType) {
-            $renderer = new RssRenderer();
+            $renderer = new Apify_RssRenderer();
         } else if ('html' === $contentType) {
-            $renderer = new HtmlRenderer();
+            $renderer = new Apify_HtmlRenderer();
         } else {
-            $renderer = new HtmlRenderer();
-            $e = new RendererException('Content type missing or invalid', Response::NOT_FOUND);
+            $renderer = new Apify_HtmlRenderer();
+            $e = new Apify_RendererException('Content type missing or invalid', Apify_Response::NOT_FOUND);
             $response->setException($e);     
         }
         
@@ -53,18 +53,18 @@ class Renderer
     }
 }
 
-class HtmlRenderer
+class Apify_HtmlRenderer
 {
     /**
-     * @param Request $request
-     * @param Response $response
+     * @param Apify_Request $request
+     * @param Apify_Response $response
      * @return string
      * @throws RuntimeException
      */
-    public function render(Request $request, Response $response)
+    public function render(Apify_Request $request, Apify_Response $response)
     {
         $view = $response->getView(); 
-        if (! ($view instanceof View))  {
+        if (! ($view instanceof Apify_View))  {
             throw new RuntimeException('No View object set; unable to render view');
         }
         
@@ -106,14 +106,14 @@ class HtmlRenderer
     }
 }
 
-class JsonRenderer
+class Apify_JsonRenderer
 {
     /**
-     * @param Request $request
-     * @param Response $response
+     * @param Apify_Request $request
+     * @param Apify_Response $response
      * @return string
      */
-    public function render(Request $request, Response $response)
+    public function render(Apify_Request $request, Apify_Response $response)
     {
         $body = json_encode($response->toArray());
         $callback = $request->getParam('jsonCallback', null);
@@ -129,14 +129,14 @@ class JsonRenderer
     }
 }
 
-class XmlRenderer
+class Apify_XmlRenderer
 {
     /**
-     * @param Request $request
-     * @param Response $response
+     * @param Apify_Request $request
+     * @param Apify_Response $response
      * @return string
      */
-    public function render(Request $request, Response $response)
+    public function render(Apify_Request $request, Apify_Response $response)
     {
         $response->setContentTypeHeader('xml');
         $data = $response->toArray();
@@ -183,14 +183,14 @@ class XmlRenderer
     }
 }
 
-class RssRenderer extends XmlRenderer
+class Apify_RssRenderer extends Apify_XmlRenderer
 {
     /**
-     * @param Request $request
-     * @param Response $response
+     * @param Apify_Request $request
+     * @param Apify_Response $response
      * @return string
      */
-    public function render(Request $request, Response $response)
+    public function render(Apify_Request $request, Apify_Response $response)
     {
         $response->setContentTypeHeader('rss');
         $data = $response->toArray();

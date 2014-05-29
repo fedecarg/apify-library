@@ -15,11 +15,11 @@ class ErrorController
         // get the Exception from the Response
         $exception = $response->getException();
         switch ($exception->getCode()) { 
-            case Response::NOT_FOUND:
+            case Apify_Response::NOT_FOUND:
                 // 404 error - controller or action not found
                 $viewScript = 'pagenotfound';
                 break;
-            case Response::NOT_ACCEPTABLE:
+            case Apify_Response::NOT_ACCEPTABLE:
                 // 406 error - content type missing or invalid
                 break;
             default: 
@@ -28,7 +28,7 @@ class ErrorController
         }
         
         if ('html' === $request->getContentType()) {
-            $view = new View();
+            $view = new Apify_View();
             $view->setScript($viewScript);
             $view->setLayout('error');
             $response->setView($view);

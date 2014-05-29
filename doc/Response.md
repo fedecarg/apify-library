@@ -8,22 +8,22 @@ In Apify, Controllers handle incoming HTTP requests, interact with the model to 
 
 Creating a RESTful web API with Apify is easy. Each action results in a response, which holds the headers and document to be sent to the user’s browser. You are responsible for generating the response object inside the action method.
 
-    class UsersController extends Controller
+    class UsersController extends Apify_Controller
     {
         public function indexAction($request)
         {
             // 200 OK
-            return new Response();
+            return new Apify_Response();
         }
     }
 
 The response object describes the status code and any headers that are sent. The default response is always 200 OK, however, it is possible to overwrite the default status code and add additional headers:
 
-    class UsersController extends Controller
+    class UsersController extends Apify_Controller
     {
         public function indexAction($request)
         {
-            $response = new Response();
+            $response = new Apify_Response();
 
             // 401 Unauthorized
             $response->setCode(Response::UNAUTHORIZED);
@@ -55,26 +55,26 @@ Specifying the response format in the query string. This means a format=xml or f
 Sending a standard Accept header in your request (text/html, application/xml or application/json).
 The acceptContentTypes() method indicates that the request only accepts certain content types:
 
-    class UsersController extends Controller
+    class UsersController extends Apify_Controller
     {
         public function indexAction($request)
         {
         	// only accept JSON and XML
             $request->acceptContentTypes(array('json', 'xml'));
 
-            return new Response();
+            return new Apify_Response();
         }
     }
 
 Apify will render the error message according to the format of the request.
 
-    class UsersController extends Controller
+    class UsersController extends Apify_Controller
     {
         public function indexAction($request)
         {
             $request->acceptContentTypes(array('json', 'xml'));
 
-        	$response = new Response();
+        	$response = new Apify_Response();
             if (! $request->hasParam('api_key')) {
                 throw new Exception('Missing parameter: api_key', Response::FORBIDDEN);
             }
@@ -153,7 +153,7 @@ DELETE, to different actions in a controller. This basic REST design principle e
 If you wish to enable RESTful mappings, add the following line to the index.php file:
 
     try {
-        $request = new Request();
+        $request = new Apify_Request();
         $request->enableUrlRewriting();
         $request->enableRestfulMapping();
         $request->dispatch();
@@ -163,7 +163,7 @@ If you wish to enable RESTful mappings, add the following line to the index.php 
 
 The RESTful UsersController for the above mapping will contain 5 actions as follows:
 
-    class UsersController extends Controller
+    class UsersController extends Apify_Controller
     {
         public function indexAction($request) {}
         public function showAction($request) {}

@@ -16,7 +16,7 @@
 
 <h3>Queries</h3>
 <div class="info">
-	<pre><?php try { var_dump(Loader::getInstance()->getDatabase()->getQueries()); } catch (Exception $e) { echo 'Not connected'; } ?></pre>
+	<pre><?php try { var_dump(Apify_Loader::getInstance()->getDatabase()->getQueries()); } catch (Exception $e) { echo 'Not connected'; } ?></pre>
 </div>
 
 <br/>

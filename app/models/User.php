@@ -1,5 +1,5 @@
 <?php
-class User extends Entity
+class User extends Apify_Entity
 {
     protected $id;
     protected $email;
@@ -14,7 +14,7 @@ class User extends Entity
     public function setUsername($value)
     {
         if (preg_match('/[^a-z0-9\-_.]/i', $value)) { // Undefined variable error fixed
-            throw new ValidationException('Invalid username');
+            throw new Apify_ValidationException('Invalid username');
         }
         $this->username = $value;
     }
@@ -24,7 +24,7 @@ class User extends Entity
     {
         $value = htmlspecialchars(trim($value), ENT_QUOTES);
         if (empty($value) || strlen($value) < 3) {
-            throw new ValidationException('Invalid name');
+            throw new Apify_ValidationException('Invalid name');
         }
         $this->name = $value;
     }
@@ -33,7 +33,7 @@ class User extends Entity
     public function setEmail($value)
     {
         if (! filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            throw new ValidationException('Invalid email address');
+            throw new Apify_ValidationException('Invalid email address');
         }
         $this->email = $value;
     }

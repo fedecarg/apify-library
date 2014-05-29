@@ -1,5 +1,5 @@
 <?php
-class Post extends Entity
+class Post extends Apify_Entity
 {
     protected $id;
     protected $category_id;
@@ -11,7 +11,7 @@ class Post extends Entity
     public function setCategoryId($value)
     {
         if (! is_numeric($value)) {
-            throw new ValidationException('The category you have selected is invalid');
+            throw new Apify_ValidationException('The category you have selected is invalid');
         }
         $this->category_id = (int) $value;
     }
@@ -20,7 +20,7 @@ class Post extends Entity
     {
         $value = htmlspecialchars(strip_tags($value), ENT_QUOTES);
         if (empty($value) || strlen($value) < 5) {
-            throw new ValidationException('The title is shorter than 5 characters');
+            throw new Apify_ValidationException('The title is shorter than 5 characters');
         }
         $this->title = $value;
     }
@@ -29,7 +29,7 @@ class Post extends Entity
     {
         $value = htmlspecialchars(strip_tags($value), ENT_QUOTES);
         if (empty($value) || strlen($value) < 5) {
-            throw new ValidationException('The text is shorter than 5 characters');
+            throw new Apify_ValidationException('The text is shorter than 5 characters');
         }        
         $this->text = $value;
     }    

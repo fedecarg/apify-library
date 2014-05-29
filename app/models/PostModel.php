@@ -1,5 +1,5 @@
 <?php
-class PostModel extends Model
+class PostModel extends Apify_Model
 {
     /**
      * By default, the entity will be persisted to a table with the same name 
@@ -18,7 +18,7 @@ class PostModel extends Model
      * @param string $foo
      * @param string $bar
      * @returns false|obj
-     * @throws ModelException
+     * @throws Apify_ModelException
      */
     public function findByFooOrBar($foo, $bar)
     {
@@ -29,7 +29,7 @@ class PostModel extends Model
             $stmt = $this->execute($sql, array($foo, $bar));
             return $stmt->fetch();
         } catch (Exception $e) {
-            throw new ModelException($e->getMessage());
+            throw new Apify_ModelException($e->getMessage());
         }
     }
     
@@ -40,7 +40,7 @@ class PostModel extends Model
      * @param int $categoryId
      * @param array $options sort, order, page and count
      * @returns false|array
-     * @throws ModelException
+     * @throws Apify_ModelException
      */
     public function findAllByCategoryId($categoryId, $options)
     {        
@@ -66,7 +66,7 @@ class PostModel extends Model
             $stmt = $this->execute($sql, array($categoryId));
             return $stmt->fetchAll();
         } catch (Exception $e) {
-            throw new ModelException($e->getMessage());
+            throw new Apify_ModelException($e->getMessage());
         }
     }
 }

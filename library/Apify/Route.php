@@ -1,112 +1,11 @@
-<?php
+<?php 
 /**
  * Zend Framework
  *
  * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd New BSD License
  */
-class Router
-{
-    /**
-     * @var array Array of routes to match against
-     */
-    protected $routes = array();
-    
-    /**
-     * Add routes to the route chain
-     *
-     * @param array $routes Array of routes with names as keys and routes as values
-     */
-    public function addRoutes($routes) 
-    {
-        foreach ($routes as $name => $route) {
-            $this->routes[$name] = $route;
-        }
-    }
-
-    /**
-     * Check if named route exists
-     *
-     * @param string $name Name of the route
-     * @return boolean
-     */
-    public function hasRoute($name)
-    {
-        return isset($this->_routes[$name]);
-    }
-    
-    /**
-     * Retrieve a named route
-     *
-     * @param string $name Name of the route
-     * @return Route object
-     * @throws RuntimeException
-     */
-    public function getRoute($name)
-    {
-        if (!isset($this->routes[$name])) {
-            throw new RuntimeException("Route $name is not defined");
-        }
-        return $this->routes[$name];
-    }
-
-    /**
-     * Retrieve an array of routes added to the route chain
-     *
-     * @return array All of the defined routes
-     */
-    public function getRoutes()
-    {
-        return $this->routes;
-    }
-
-    /**
-     * Find a matching route to the current url path and inject
-     * returning values to the Request object.
-     *
-     * @return Request object
-     */
-    public function route(Request $request)
-    {
-        if (! $this->hasRoute('default')) {
-            $route = array('controller' => 'index', 'action' => 'index');
-            $compat = new RouteStatic('default', $route);
-            $this->routes = array_merge(array('default' => $compat), $this->routes);
-        }
-        
-        $urlPath = $request->getUrlPath();
-
-        foreach (array_reverse($this->routes) as $name => $route) {
-            if ($params = $route->match($urlPath)) {
-                $this->setRequestParams($request, $params);
-                break;
-            }
-        }
-
-        return $request;
-    }
-
-    public function setRequestParams($request, $params)
-    {
-        foreach ($params as $param => $value) {
-            $request->setParam($param, $value);
-            if ($param === 'controller') {
-                $request->setController($value);
-            }
-            if ($param === 'action') {
-                $request->setAction($value);
-            }
-        }
-    }
-}
-
-/**
- * Zend Framework
- *
- * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd New BSD License
- */
-class Route
+class Apify_Route
 {
     protected $urlVariable = ':';
     protected $urlDelimiter = '/';
@@ -129,7 +28,7 @@ class Route
      * @param string $route Map used to match with later submitted URL path
      * @param array $defaults Defaults for map variables with keys as variable names
      * @param array $reqs Regular expression requirements for variables (keys as variable names)
-     */
+    */
     public function __construct($route, $defaults = array(), $reqs = array())
     {
         $route = trim($route, $this->urlDelimiter);
@@ -153,7 +52,7 @@ class Route
             }
         }
     }
-    
+
     protected function getWildcardData($parts, $unique)
     {
         $pos = count($parts);
@@ -323,7 +222,7 @@ class Route
      * @param string $name Array key of the parameter
      * @return string Previously set default
      */
-    public function getDefault($name) 
+    public function getDefault($name)
     {
         if (isset($this->defaults[$name])) {
             return $this->defaults[$name];
@@ -336,83 +235,8 @@ class Route
      *
      * @return array Route defaults
      */
-    public function getDefaults() 
+    public function getDefaults()
     {
         return $this->defaults;
     }
 }
-
-/**
- * Zend Framework
- *
- * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd New BSD License
- */
-class RouteStatic
-{
-    protected $route = null;
-    protected $defaults = array();
-
-    /**
-     * Prepares the route for mapping.
-     *
-     * @param string $route Map used to match with later submitted URL path
-     * @param array $defaults Defaults for map variables with keys as variable names
-     */
-    public function __construct($route, $defaults = array())
-    {
-        $this->route = trim($route, '/');
-        $this->defaults = (array) $defaults;
-    }
-
-    /**
-     * Matches a user submitted path with a previously defined route.
-     * Assigns and returns an array of defaults on a successful match.
-     *
-     * @param string $path Path used to match against this routing map
-     * @return array|false An array of assigned values or a false on a mismatch
-     */
-    public function match($path)
-    {
-        if (trim($path, '/') == $this->route) {
-            return $this->defaults;
-        }
-        return false;
-    }
-
-    /**
-     * Assembles a URL path defined by this route
-     *
-     * @param array $data An array of variable and value pairs used as parameters
-     * @return string Route path with user submitted parameters
-     */
-    public function assemble($data = array())
-    {
-        return $this->route;
-    }
-
-    /**
-     * Return a single parameter of route's defaults
-     *
-     * @param string $name Array key of the parameter
-     * @return string Previously set default
-     */
-    public function getDefault($name) 
-    {
-        if (isset($this->defaults[$name])) {
-            return $this->defaults[$name];
-        }
-        return null;
-    }
-
-    /**
-     * Return an array of defaults
-     *
-     * @return array Route defaults
-     */
-    public function getDefaults() 
-    {
-        return $this->defaults;
-    }
-}
-
